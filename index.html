@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>BlockCraft Science Quest - Primary 4</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#87ceeb;
+  text-align:center;
+}
+.game{
+  max-width:900px;
+  margin:auto;
+  padding:20px;
+}
+h1{color:#2e7d32;}
+.world{
+  background:#6ab04c;
+  border:6px solid #3d6b22;
+  border-radius:12px;
+  padding:20px;
+  min-height:420px;
+}
+.blocks{
+  display:flex;
+  justify-content:center;
+  gap:8px;
+  margin:20px 0;
+  flex-wrap:wrap;
+}
+.block{
+  width:60px;
+  height:60px;
+  background:#8b5a2b;
+  border:4px solid #5d3a1a;
+  box-shadow:inset -6px -6px rgba(0,0,0,0.2);
+}
+.grass{background:#4caf50;}
+.stone{background:#888;}
+.water{background:#2196f3;}
+.lava{background:#ff5722;}
+.card{
+  background:white;
+  padding:20px;
+  border-radius:12px;
+  margin-top:20px;
+}
+button{
+  display:block;
+  width:90%;
+  max-width:500px;
+  margin:10px auto;
+  padding:14px;
+  font-size:16px;
+  border:0;
+  border-radius:8px;
+  background:#795548;
+  color:white;
+  cursor:pointer;
+}
+button:hover{background:#5d4037;}
+#feedback{
+  font-weight:bold;
+  font-size:20px;
+  margin:15px;
+}
+.stats{
+  font-size:18px;
+  margin:10px;
+}
+</style>
+</head>
+<body>
+
+<div class="game">
+  <h1>⛏️ BlockCraft Science Quest</h1>
+  <p>Primary 4 Science Adventure</p>
+
+  <div class="stats">
+    ❤️ Lives: <span id="lives">3</span> |
+    ⭐ Score: <span id="score">0</span> |
+    🧱 Blocks Built: <span id="blocksBuilt">0</span>
+  </div>
+
+  <div class="world">
+    <h2 id="levelTitle">Loading...</h2>
+
+    <div class="blocks" id="blocks"></div>
+
+    <div class="card">
+      <h2 id="question"></h2>
+      <div id="answers"></div>
+      <div id="feedback"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const questions = [
+  {
+    topic:"Plants",
+    q:"Which plant part absorbs water and mineral salts from the soil?",
+    options:["Leaf","Root","Flower","Fruit"],
+    answer:1,
+    explain:"Roots absorb water and mineral salts from the soil."
+  },
+  {
+    topic:"Plants",
+    q:"Which part of a plant makes food using sunlight?",
+    options:["Stem","Leaf","Root","Seed"],
+    answer:1,
+    explain:"Leaves make food through photosynthesis."
+  },
+  {
+    topic:"Life Cycles",
+    q:"Which is the correct life cycle of a butterfly?",
+    options:[
+      "Egg → Caterpillar → Pupa → Adult",
+      "Egg → Pupa → Caterpillar → Adult",
+      "Caterpillar → Egg → Adult → Pupa",
+      "Pupa → Egg → Caterpillar → Adult"
+    ],
+    answer:0,
+    explain:"A butterfly changes from egg to caterpillar, then pupa, then adult."
+  },
+  {
+    topic:"Matter",
+    q:"When ice changes into water, this process is called:",
+    options:["Freezing","Melting","Evaporation","Condensation"],
+    answer:1,
+    explain:"Melting happens when a solid changes into a liquid."
+  },
+  {
+    topic:"Matter",
+    q:"Water vapour changing into water droplets is called:",
+    options:["Evaporation","Melting","Condensation","Freezing"],
+    answer:2,
+    explain:"Condensation happens when gas changes into liquid."
+  },
+  {
+    topic:"Magnets",
+    q:"Which material is attracted to a magnet?",
+    options:["Wood","Plastic","Iron","Rubber"],
+    answer:2,
+    explain:"Magnets attract magnetic materials such as iron and steel."
+  },
+  {
+    topic:"Magnets",
+    q:"What happens when two north poles of magnets are placed near each other?",
+    options:["They attract","They repel","They melt","They disappear"],
+    answer:1,
+    explain:"Like poles repel. Unlike poles attract."
+  },
+  {
+    topic:"Forces",
+    q:"Friction usually causes a moving object to:",
+    options:["Speed up","Slow down","Become heavier","Change colour"],
+    answer:1,
+    explain:"Friction opposes motion and usually slows objects down."
+  },
+  {
+    topic:"Forces",
+    q:"Which force pulls objects towards the Earth?",
+    options:["Gravity","Magnetism","Friction","Electricity"],
+    answer:0,
+    explain:"Gravity pulls objects towards Earth."
+  },
+  {
+    topic:"Food Chains",
+    q:"Grass → Grasshopper → Frog → Snake. Which organism is the producer?",
+    options:["Grass","Grasshopper","Frog","Snake"],
+    answer:0,
+    explain:"Plants are producers because they make their own food."
+  }
+];
+
+let current = 0;
+let score = 0;
+let lives = 3;
+let blocksBuilt = 0;
+
+function loadQuestion(){
+  document.getElementById("feedback").innerHTML = "";
+  document.getElementById("levelTitle").innerHTML =
+    "Level " + (current + 1) + ": " + questions[current].topic;
+
+  document.getElementById("question").innerHTML = questions[current].q;
+
+  const answers = document.getElementById("answers");
+  answers.innerHTML = "";
+
+  questions[current].options.forEach((option,index)=>{
+    const btn = document.createElement("button");
+    btn.innerHTML = option;
+    btn.onclick = () => checkAnswer(index);
+    answers.appendChild(btn);
+  });
+}
+
+function checkAnswer(choice){
+  const q = questions[current];
+  const buttons = document.querySelectorAll("button");
+  buttons.forEach(b => b.disabled = true);
+
+  if(choice === q.answer){
+    score += 10;
+    blocksBuilt++;
+    addBlock();
+    document.getElementById("feedback").innerHTML =
+      "✅ Correct! You mined a science block. " + q.explain;
+  } else {
+    lives--;
+    document.getElementById("feedback").innerHTML =
+      "❌ Wrong. " + q.explain;
+  }
+
+  updateStats();
+
+  setTimeout(()=>{
+    if(lives <= 0){
+      gameOver();
+    } else {
+      current++;
+      if(current < questions.length){
+        loadQuestion();
+      } else {
+        winGame();
+      }
+    }
+  }, 1800);
+}
+
+function addBlock(){
+  const block = document.createElement("div");
+  const types = ["block","block grass","block stone","block water"];
+  block.className = types[Math.floor(Math.random()*types.length)];
+  document.getElementById("blocks").appendChild(block);
+}
+
+function updateStats(){
+  document.getElementById("score").innerHTML = score;
+  document.getElementById("lives").innerHTML = lives;
+  document.getElementById("blocksBuilt").innerHTML = blocksBuilt;
+}
+
+function winGame(){
+  document.querySelector(".world").innerHTML = `
+    <h1>🏆 Quest Complete!</h1>
+    <h2>You built your Science Base!</h2>
+    <p>Score: ${score}/100</p>
+    <p>Blocks Built: ${blocksBuilt}</p>
+    <button onclick="location.reload()">Play Again</button>
+  `;
+}
+
+function gameOver(){
+  document.querySelector(".world").innerHTML = `
+    <h1>💀 Game Over</h1>
+    <h2>Your science base collapsed!</h2>
+    <p>Score: ${score}/100</p>
+    <button onclick="location.reload()">Try Again</button>
+  `;
+}
+
+loadQuestion();
+</script>
+
+</body>
+</html>
