@@ -5,268 +5,434 @@
 <title>BlockCraft Science Quest - Primary 4</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-body{
-  margin:0;
-  font-family:Arial,sans-serif;
-  background:#87ceeb;
-  text-align:center;
-}
-.game{
-  max-width:900px;
-  margin:auto;
-  padding:20px;
-}
-h1{color:#2e7d32;}
-.world{
-  background:#6ab04c;
-  border:6px solid #3d6b22;
-  border-radius:12px;
-  padding:20px;
-  min-height:420px;
-}
-.blocks{
-  display:flex;
-  justify-content:center;
-  gap:8px;
-  margin:20px 0;
-  flex-wrap:wrap;
-}
-.block{
-  width:60px;
-  height:60px;
-  background:#8b5a2b;
-  border:4px solid #5d3a1a;
-  box-shadow:inset -6px -6px rgba(0,0,0,0.2);
-}
-.grass{background:#4caf50;}
-.stone{background:#888;}
-.water{background:#2196f3;}
-.lava{background:#ff5722;}
-.card{
-  background:white;
-  padding:20px;
-  border-radius:12px;
-  margin-top:20px;
-}
-button{
-  display:block;
-  width:90%;
-  max-width:500px;
-  margin:10px auto;
-  padding:14px;
-  font-size:16px;
-  border:0;
-  border-radius:8px;
-  background:#795548;
-  color:white;
-  cursor:pointer;
-}
-button:hover{background:#5d4037;}
-#feedback{
-  font-weight:bold;
-  font-size:20px;
-  margin:15px;
-}
-.stats{
-  font-size:18px;
-  margin:10px;
-}
+body{margin:0;font-family:Arial,sans-serif;background:#8fd3ff;text-align:center}
+.game{max-width:980px;margin:auto;padding:20px}
+h1{color:#2e7d32}
+.world{background:#6ab04c;border:6px solid #3d6b22;border-radius:12px;padding:20px;min-height:520px}
+.card{background:white;padding:22px;border-radius:12px;margin-top:20px}
+button{display:block;width:92%;max-width:720px;margin:10px auto;padding:14px;font-size:16px;border:0;border-radius:8px;background:#795548;color:white;cursor:pointer}
+button:hover{background:#5d4037}
+.option-btn{background:#2e7d32}
+.option-btn:hover{background:#1b5e20}
+.selected{background:#1565c0!important}
+.skip{background:#e65100}
+.stats{font-size:18px;margin:10px}
+#feedback{font-weight:bold;font-size:18px;margin-top:15px}
+.blocks{display:flex;justify-content:center;gap:8px;margin:15px 0;flex-wrap:wrap}
+.block{width:38px;height:38px;background:#8b5a2b;border:4px solid #5d3a1a}
+.grass{background:#4caf50}.stone{background:#888}.water{background:#2196f3}.gold{background:#fbc02d}
+.timer-good{color:#1565c0}.timer-warning{color:#e65100}.timer-danger{color:#b71c1c}
+.small{font-size:14px;color:#555}
+.progress{background:#ddd;border-radius:20px;overflow:hidden;height:18px;margin:12px auto;max-width:650px}
+.progress-bar{height:100%;width:0%;background:#2e7d32}
 </style>
 </head>
+
 <body>
-
 <div class="game">
-  <h1>⛏️ BlockCraft Science Quest</h1>
-  <p>Primary 4 Science Adventure</p>
+<h1>⛏️ BlockCraft Science Quest</h1>
+<p>Singapore Primary 4 Science Practice</p>
 
-  <div class="stats">
-    ❤️ Lives: <span id="lives">3</span> |
-    ⭐ Score: <span id="score">0</span> |
-    🧱 Blocks Built: <span id="blocksBuilt">0</span>
-  </div>
+<div class="stats" id="stats" style="display:none;">
+⭐ Score: <span id="score">0</span> |
+✅ Correct: <span id="correct">0</span> |
+❌ Wrong: <span id="wrong">0</span> |
+⏭️ Skipped: <span id="skipped">0</span> |
+⏱️ Session Time: <span id="timer" class="timer-good">00:00</span>
+</div>
 
-  <div class="world">
-    <h2 id="levelTitle">Loading...</h2>
-
-    <div class="blocks" id="blocks"></div>
-
-    <div class="card">
-      <h2 id="question"></h2>
-      <div id="answers"></div>
-      <div id="feedback"></div>
-    </div>
-  </div>
+<div class="world">
+<div id="screen"></div>
+<div class="blocks" id="blocks"></div>
+</div>
 </div>
 
 <script>
-const questions = [
-  {
-    topic:"Plants",
-    q:"Which plant part absorbs water and mineral salts from the soil?",
-    options:["Leaf","Root","Flower","Fruit"],
-    answer:1,
-    explain:"Roots absorb water and mineral salts from the soil."
-  },
-  {
-    topic:"Plants",
-    q:"Which part of a plant makes food using sunlight?",
-    options:["Stem","Leaf","Root","Seed"],
-    answer:1,
-    explain:"Leaves make food through photosynthesis."
-  },
-  {
-    topic:"Life Cycles",
-    q:"Which is the correct life cycle of a butterfly?",
-    options:[
-      "Egg → Caterpillar → Pupa → Adult",
-      "Egg → Pupa → Caterpillar → Adult",
-      "Caterpillar → Egg → Adult → Pupa",
-      "Pupa → Egg → Caterpillar → Adult"
-    ],
-    answer:0,
-    explain:"A butterfly changes from egg to caterpillar, then pupa, then adult."
-  },
-  {
-    topic:"Matter",
-    q:"When ice changes into water, this process is called:",
-    options:["Freezing","Melting","Evaporation","Condensation"],
-    answer:1,
-    explain:"Melting happens when a solid changes into a liquid."
-  },
-  {
-    topic:"Matter",
-    q:"Water vapour changing into water droplets is called:",
-    options:["Evaporation","Melting","Condensation","Freezing"],
-    answer:2,
-    explain:"Condensation happens when gas changes into liquid."
-  },
-  {
-    topic:"Magnets",
-    q:"Which material is attracted to a magnet?",
-    options:["Wood","Plastic","Iron","Rubber"],
-    answer:2,
-    explain:"Magnets attract magnetic materials such as iron and steel."
-  },
-  {
-    topic:"Magnets",
-    q:"What happens when two north poles of magnets are placed near each other?",
-    options:["They attract","They repel","They melt","They disappear"],
-    answer:1,
-    explain:"Like poles repel. Unlike poles attract."
-  },
-  {
-    topic:"Forces",
-    q:"Friction usually causes a moving object to:",
-    options:["Speed up","Slow down","Become heavier","Change colour"],
-    answer:1,
-    explain:"Friction opposes motion and usually slows objects down."
-  },
-  {
-    topic:"Forces",
-    q:"Which force pulls objects towards the Earth?",
-    options:["Gravity","Magnetism","Friction","Electricity"],
-    answer:0,
-    explain:"Gravity pulls objects towards Earth."
-  },
-  {
-    topic:"Food Chains",
-    q:"Grass → Grasshopper → Frog → Snake. Which organism is the producer?",
-    options:["Grass","Grasshopper","Frog","Snake"],
-    answer:0,
-    explain:"Plants are producers because they make their own food."
-  }
-];
+const topics = ["Plants","Matter","Magnets","Forces","Life Cycles","Food Chains"];
 
+const templates = {
+Plants:[
+["A plant was kept in a dark cupboard but watered daily. After one week, its leaves turned yellow. Why?",
+["It did not get enough sunlight to make food.","It received too much water.","It had no oxygen.","It had too much soil."],0,"Plants need sunlight to make food."],
+["Two similar plants were given the same amount of water. Plant A was near a window. Plant B was in a box. Which should grow better?",
+["Plant A, because it receives sunlight.","Plant B, because it is protected.","Both will grow the same.","Neither will grow."],0,"Sunlight helps plants make food."],
+["A seedling with damaged roots is likely to die. Why?",
+["It cannot absorb enough water and mineral salts.","It cannot attract bees.","It cannot make fruits immediately.","It cannot bend towards light."],0,"Roots absorb water and mineral salts."],
+["A pupil removed most leaves from a plant. The plant grew poorly. Why?",
+["It could not make enough food.","It could not absorb water.","It became heavier.","It received too much air."],0,"Leaves help plants make food."],
+["A plant has a weak stem. What problem is it most likely to face?",
+["It may not be held upright properly.","It will not need water.","It will become magnetic.","It will stop losing water completely."],0,"The stem supports the plant."],
+["A farmer covers young plants with a net that blocks too much sunlight. What may happen?",
+["The plants may grow weakly.","The plants will make more food.","The roots will disappear.","The soil will become magnetic."],0,"Too little sunlight reduces food-making."],
+["A plant is watered daily but kept without light. Which statement is best?",
+["Water alone is not enough for healthy growth.","Water can replace sunlight.","The plant does not need air.","The leaves will make more food."],0,"Plants need water, air and sunlight."],
+["A plant's roots are covered with plastic tightly. What will most likely happen?",
+["The plant may not take in water properly.","The leaves will grow faster.","The flower will become fruit immediately.","The stem will become shorter instantly."],0,"Roots need contact with soil water."],
+["A pupil wants to test whether sunlight affects plant growth. What should be changed?",
+["Amount of sunlight only.","Type of plant and water together.","Size of pot, water and soil.","Everything at once."],0,"A fair test changes only one variable."],
+["Why do leaves usually have a large flat surface?",
+["To capture more sunlight.","To absorb soil directly.","To hold the plant upright.","To attract magnets."],0,"Large leaf surfaces help capture sunlight."]
+],
+Matter:[
+["Water droplets formed outside a cold cup. Where did they come from?",
+["Water vapour in the air condensed.","Water leaked through the cup.","The cup melted.","The drink passed through the cup."],0,"Water vapour condenses on cold surfaces."],
+["A wet shirt dries faster under the sun. Why?",
+["Heat speeds up evaporation.","Sunlight freezes water.","The shirt absorbs more water.","Air becomes solid."],0,"Heat increases evaporation."],
+["Ice cubes become water after being left outside. What happened?",
+["The ice gained heat and melted.","The ice lost heat and melted.","The water froze.","The air became colder."],0,"Ice melts when it gains heat."],
+["A mirror becomes misty after a hot shower. What process causes this?",
+["Condensation","Freezing","Melting","Burning"],0,"Steam cools and condenses on the mirror."],
+["Which setup dries a wet towel fastest?",
+["Under the sun with moving air.","In a closed dark cupboard.","Folded tightly in a bag.","Inside a cold fridge."],0,"Heat and moving air increase evaporation."],
+["A puddle disappears after a hot afternoon. What happened?",
+["Water evaporated into water vapour.","Water froze into ice.","Water turned into soil.","Water became heavier."],0,"Evaporation changes liquid water to water vapour."],
+["A cold bottle taken from a fridge becomes wet outside. Why?",
+["Water vapour in air cools and condenses.","The bottle sweats from inside.","Plastic changes into water.","Cold air becomes solid."],0,"Condensation forms droplets outside cold objects."],
+["Which condition slows evaporation most?",
+["Cool air and no wind.","Hot sun and strong wind.","Large exposed surface.","Warm moving air."],0,"Cool still air slows evaporation."],
+["Steam from boiling water touches a cool lid and forms droplets. What change occurs?",
+["Gas to liquid.","Liquid to gas.","Solid to liquid.","Liquid to solid."],0,"Condensation is gas changing to liquid."],
+["Butter melts on a hot pan. Why?",
+["It gains heat.","It loses heat.","It condenses.","It freezes."],0,"Melting happens when a solid gains heat."]
+],
+Magnets:[
+["A magnet attracts paper clips but not aluminium foil. What can you conclude?",
+["Only some metals are magnetic.","All metals are magnetic.","Aluminium is heavier.","Paper clips are not metal."],0,"Not all metals are magnetic."],
+["Two magnets push away from each other. What is the likely reason?",
+["Like poles are facing each other.","Unlike poles are facing each other.","They are too heavy.","They have no poles."],0,"Like poles repel."],
+["A steel pin moves towards a magnet even with paper between them. What does this show?",
+["Magnetic force can pass through some materials.","Paper is magnetic.","The pin became lighter.","The magnet touched the pin."],0,"Magnetic force can act through paper."],
+["A pupil wants to find out which material is magnetic. What should he do?",
+["Bring a magnet near each material.","Weigh each material.","Put each material in water.","Heat each material."],0,"A magnet tests magnetic attraction."],
+["Which object is most likely to be attracted by a magnet?",
+["Steel nail","Plastic ruler","Wooden chopstick","Rubber band"],0,"Steel is magnetic."],
+["A compass needle moves when a magnet is brought near it. Why?",
+["The magnet exerts a magnetic force.","The compass becomes heavier.","The air pushes the needle.","The compass melts."],0,"Magnets exert magnetic force."],
+["A magnet picks up steel pins through a thin plastic sheet. What is the best conclusion?",
+["Magnetic force can act through thin plastic.","Plastic is always magnetic.","Steel is not magnetic.","The magnet touched the pins."],0,"Magnetic force can pass through some materials."],
+["Which pair will attract each other?",
+["North pole and south pole.","North pole and north pole.","South pole and south pole.","Two plastic rulers."],0,"Unlike magnetic poles attract."],
+["A magnet is dropped many times and becomes weaker. What may have happened?",
+["It lost some magnetism.","It became larger.","It became plastic.","It changed into wood."],0,"Rough handling can weaken a magnet."],
+["Why are magnets useful in a recycling centre?",
+["They can separate iron and steel objects.","They can melt plastic.","They can make paper heavier.","They can turn glass into metal."],0,"Magnets attract iron and steel."]
+],
+Forces:[
+["A toy car travels further on smooth tiles than on carpet. Why?",
+["There is less friction on tiles.","There is more gravity on carpet.","The car is heavier on carpet.","Tiles push the car."],0,"Less friction allows it to travel further."],
+["A ball slows down after rolling on the floor. Which force causes this?",
+["Friction","Magnetism","Light","Electricity"],0,"Friction slows moving objects."],
+["A pupil rubs his hands together and feels warmth. Why?",
+["Friction produces heat.","Gravity produces heat.","Air turns into fire.","Hands become magnetic."],0,"Friction can produce heat."],
+["Why do shoes usually have grooves at the bottom?",
+["To increase friction and prevent slipping.","To reduce weight only.","To make shoes magnetic.","To absorb sunlight."],0,"Grooves increase friction."],
+["A heavier book is harder to push than a lighter book on the same table. Why?",
+["There is usually more friction.","There is less gravity.","It has no mass.","It becomes sticky."],0,"Heavier objects may have more friction."],
+["A parachute helps a person fall more slowly. Why?",
+["It increases air resistance.","It removes gravity.","It makes the person weightless.","It turns air into water."],0,"Air resistance slows falling objects."],
+["A rubber mat is placed under a ladder. Why?",
+["To increase friction and prevent slipping.","To make the ladder lighter.","To make the ladder magnetic.","To reduce gravity."],0,"More friction improves grip."],
+["A bicycle stops when the brakes are pressed. What increases?",
+["Friction between brake pads and wheel.","Gravity from Earth.","Magnetic force from the seat.","Light from the tyres."],0,"Brakes use friction to slow wheels."],
+["A box moves when pushed. What can a force do?",
+["Start or change motion.","Only change colour.","Only make sound.","Only produce light."],0,"Forces can change motion."],
+["A ball thrown upward falls back down. Why?",
+["Gravity pulls it towards Earth.","Friction pushes it up forever.","The ball becomes magnetic.","Air turns it into liquid."],0,"Gravity pulls objects down."]
+],
+"Life Cycles":[
+["A caterpillar was found after eggs hatched on a leaf. Which animal is likely being observed?",
+["Butterfly","Chicken","Fish","Cat"],0,"Butterfly eggs hatch into caterpillars."],
+["A tadpole develops legs and later becomes an adult frog. What is this change called?",
+["Metamorphosis","Evaporation","Condensation","Magnetisation"],0,"Frogs undergo metamorphosis."],
+["Why are fruits important in a plant life cycle?",
+["They contain seeds for reproduction.","They absorb water.","They hold the plant upright.","They make all food."],0,"Fruits usually contain seeds."],
+["Which stage comes after caterpillar in a butterfly life cycle?",
+["Pupa","Egg","Adult fish","Seed"],0,"The caterpillar changes into a pupa."],
+["A seed needs suitable conditions to germinate. Which is usually needed?",
+["Water","Paint","Magnet","Smoke"],0,"Seeds need water to germinate."],
+["A frog lays eggs in water. Why is water important for the early stage?",
+["Tadpoles live in water.","Adult frogs cannot jump.","Eggs need soil only.","Tadpoles are birds."],0,"Tadpoles live in water."],
+["A young plant grows towards light. What does this help it do?",
+["Receive more sunlight to make food.","Avoid absorbing water.","Become magnetic.","Stop growing roots."],0,"Sunlight is needed for food-making."],
+["Which animal has a three-stage life cycle?",
+["Chicken","Butterfly","Mosquito","Frog"],0,"Chicken: egg, young, adult."],
+["Why must living things reproduce?",
+["To ensure their kind continues to exist.","To stop needing food.","To become non-living.","To remove all predators."],0,"Reproduction helps species continue."],
+["A seed did not germinate in a dry dish. Why?",
+["It lacked water.","It had too much space.","It had too much light.","It was too round."],0,"Water is needed for germination."]
+],
+"Food Chains":[
+["Grass → Grasshopper → Frog → Snake. If grass decreases greatly, what may happen?",
+["Grasshoppers may decrease.","Frogs will make food.","Snakes become producers.","Grasshoppers need no food."],0,"Grasshoppers depend on grass."],
+["Grass → Rabbit → Eagle. If rabbits decrease, what may happen to eagles?",
+["Eagles may have less food.","Eagles will eat grass only.","Eagles become plants.","Rabbits become producers."],0,"Eagles depend on rabbits."],
+["Which organism is the producer in a food chain?",
+["Green plant","Rabbit","Snake","Eagle"],0,"Green plants make their own food."],
+["A pond has water plants, small fish and big fish. If small fish decrease, what happens?",
+["Big fish may have less food.","Water plants disappear immediately.","Big fish make food.","Small fish become producers."],0,"Big fish depend on small fish."],
+["Why does every food chain usually begin with a plant?",
+["Plants can make their own food.","Plants eat animals.","Plants hunt insects only.","Plants do not need sunlight."],0,"Plants are producers."],
+["If many snakes are removed from a food chain Grass → Rabbit → Snake, what may happen?",
+["Rabbit numbers may increase.","Grass will eat rabbits.","Snakes become producers.","Rabbits disappear immediately."],0,"Fewer predators may allow prey to increase."],
+["In Seaweed → Small fish → Big fish, what is the small fish?",
+["Consumer","Producer","Non-living thing","Sunlight"],0,"Consumers eat other organisms."],
+["If all producers disappear from a habitat, what happens?",
+["Many animals may die due to lack of food.","Animals will make their own food.","Consumers become producers.","Food chains become stronger."],0,"Producers are the starting food source."],
+["Which is a correct food chain?",
+["Grass → Deer → Tiger","Tiger → Deer → Grass","Deer → Grass → Tiger","Grass → Tiger → Deer"],0,"Energy flows from producer to consumer."],
+["A hawk eats a snake. The snake eats a mouse. The mouse eats grain. What is the producer?",
+["Grain plant","Mouse","Snake","Hawk"],0,"Grain plants are producers."]
+]
+};
+
+let questionBank = [];
+for (const topic of topics){
+  for(let round=1; round<=3; round++){
+    templates[topic].forEach((item, index)=>{
+      questionBank.push({
+        topic,
+        q:item[0],
+        options:shuffleOptions(item[1], item[2]),
+        originalOptions:item[1],
+        originalAnswer:item[2],
+        explain:item[3],
+        id:`${topic}-${round}-${index}`
+      });
+    });
+  }
+}
+
+function shuffleOptions(options, answerIndex){
+  const correctText = options[answerIndex];
+  let arr = options.map((text,i)=>({text,correct:i===answerIndex}));
+  arr = shuffle(arr);
+  return {
+    choices: arr.map(x=>x.text),
+    answer: arr.findIndex(x=>x.correct)
+  };
+}
+
+let selectedTopic = "All Topics";
+let selectedTotal = 20;
+let sessionTime = 20 * 60;
+let testQuestions = [];
 let current = 0;
 let score = 0;
-let lives = 3;
-let blocksBuilt = 0;
+let correct = 0;
+let wrong = 0;
+let skipped = 0;
+let timerInterval;
+
+function showSetup(){
+  clearInterval(timerInterval);
+  document.getElementById("stats").style.display = "none";
+  document.getElementById("blocks").innerHTML = "";
+
+  let html = `
+  <div class="card">
+    <h2>Choose Your Science Challenge</h2>
+
+    <h3>1. Select Topic</h3>
+    <button class="option-btn selected" onclick="selectTopic('All Topics', this)">All Topics</button>
+  `;
+
+  topics.forEach(topic=>{
+    html += `<button class="option-btn" onclick="selectTopic('${topic}', this)">${topic}</button>`;
+  });
+
+  html += `
+    <h3>2. Select Number of Questions</h3>
+    <button class="option-btn selected" onclick="selectTotal(20, this)">20 Questions</button>
+    <button class="option-btn" onclick="selectTotal(30, this)">30 Questions</button>
+    <button class="option-btn" onclick="selectTotal(40, this)">40 Questions</button>
+
+    <p class="small">
+      Timer is for the whole session, not each question.<br>
+      20 questions = 20 minutes, 30 questions = 30 minutes, 40 questions = 40 minutes.
+    </p>
+
+    <button onclick="startTest()">Start Challenge</button>
+  </div>`;
+
+  document.getElementById("screen").innerHTML = html;
+}
+
+function selectTopic(topic, btn){
+  selectedTopic = topic;
+  const buttons = btn.parentElement.querySelectorAll("button");
+  buttons.forEach(b=>{
+    if(topics.includes(b.innerText) || b.innerText==="All Topics") b.classList.remove("selected");
+  });
+  btn.classList.add("selected");
+}
+
+function selectTotal(total, btn){
+  selectedTotal = total;
+  sessionTime = total * 60;
+  document.querySelectorAll(".option-btn").forEach(b=>{
+    if(b.innerText.includes("Questions")) b.classList.remove("selected");
+  });
+  btn.classList.add("selected");
+}
+
+function startTest(){
+  score = 0; correct = 0; wrong = 0; skipped = 0; current = 0;
+  document.getElementById("blocks").innerHTML = "";
+
+  let pool = selectedTopic === "All Topics"
+    ? [...questionBank]
+    : questionBank.filter(q=>q.topic===selectedTopic);
+
+  testQuestions = shuffle([...pool]).slice(0, selectedTotal);
+
+  sessionTime = selectedTotal * 60;
+
+  document.getElementById("stats").style.display = "block";
+  updateStats();
+  updateTimer();
+
+  timerInterval = setInterval(()=>{
+    sessionTime--;
+    updateTimer();
+    if(sessionTime <= 0){
+      endByTime();
+    }
+  },1000);
+
+  loadQuestion();
+}
 
 function loadQuestion(){
-  document.getElementById("feedback").innerHTML = "";
-  document.getElementById("levelTitle").innerHTML =
-    "Level " + (current + 1) + ": " + questions[current].topic;
+  const q = testQuestions[current];
+  const progress = (current / selectedTotal) * 100;
 
-  document.getElementById("question").innerHTML = questions[current].q;
+  document.getElementById("screen").innerHTML = `
+  <div class="card">
+    <h2>${q.topic}</h2>
+    <p>Question ${current + 1} of ${selectedTotal}</p>
+    <div class="progress"><div class="progress-bar" style="width:${progress}%"></div></div>
+    <h3>${q.q}</h3>
+    <div id="answers"></div>
+    <button class="skip" onclick="skipQuestion()">Skip Question</button>
+    <div id="feedback"></div>
+  </div>`;
 
   const answers = document.getElementById("answers");
-  answers.innerHTML = "";
-
-  questions[current].options.forEach((option,index)=>{
+  q.options.choices.forEach((choice,index)=>{
     const btn = document.createElement("button");
-    btn.innerHTML = option;
-    btn.onclick = () => checkAnswer(index);
+    btn.innerHTML = choice;
+    btn.onclick = ()=>checkAnswer(index);
     answers.appendChild(btn);
   });
 }
 
 function checkAnswer(choice){
-  const q = questions[current];
-  const buttons = document.querySelectorAll("button");
-  buttons.forEach(b => b.disabled = true);
+  const q = testQuestions[current];
+  const isCorrect = choice === q.options.answer;
 
-  if(choice === q.answer){
-    score += 10;
-    blocksBuilt++;
+  document.querySelectorAll("#answers button").forEach(b=>b.disabled=true);
+
+  if(isCorrect){
+    correct++;
+    score += 5;
     addBlock();
-    document.getElementById("feedback").innerHTML =
-      "✅ Correct! You mined a science block. " + q.explain;
-  } else {
-    lives--;
-    document.getElementById("feedback").innerHTML =
-      "❌ Wrong. " + q.explain;
+    document.getElementById("feedback").innerHTML = "✅ Correct! " + q.explain;
+  }else{
+    wrong++;
+    document.getElementById("feedback").innerHTML = "❌ Not quite. " + q.explain;
   }
 
   updateStats();
+  setTimeout(nextQuestion,1300);
+}
 
-  setTimeout(()=>{
-    if(lives <= 0){
-      gameOver();
-    } else {
-      current++;
-      if(current < questions.length){
-        loadQuestion();
-      } else {
-        winGame();
-      }
-    }
-  }, 1800);
+function skipQuestion(){
+  skipped++;
+  updateStats();
+  nextQuestion();
+}
+
+function nextQuestion(){
+  current++;
+  if(current >= selectedTotal){
+    showResults(false);
+  }else{
+    loadQuestion();
+  }
+}
+
+function endByTime(){
+  clearInterval(timerInterval);
+  showResults(true);
+}
+
+function showResults(timeUp){
+  clearInterval(timerInterval);
+
+  const attempted = correct + wrong;
+  const percentage = Math.round((correct / selectedTotal) * 100);
+
+  let grade = "";
+  if(percentage >= 90) grade = "🏆 Excellent — Science Master!";
+  else if(percentage >= 75) grade = "🌟 Strong — good exam readiness.";
+  else if(percentage >= 60) grade = "👍 Decent — practise more application questions.";
+  else grade = "📚 Weak foundation — revise before trying again.";
+
+  document.getElementById("timer").innerHTML = "00:00";
+
+  document.getElementById("screen").innerHTML = `
+  <div class="card">
+    <h1>${timeUp ? "⏱️ Time Up!" : "✅ Challenge Complete!"}</h1>
+    <h2>${grade}</h2>
+
+    <p><b>Topic:</b> ${selectedTopic}</p>
+    <p><b>Total Questions:</b> ${selectedTotal}</p>
+    <p><b>Attempted:</b> ${attempted}</p>
+    <p><b>Correct:</b> ${correct}</p>
+    <p><b>Wrong:</b> ${wrong}</p>
+    <p><b>Skipped:</b> ${skipped}</p>
+    <p><b>Score:</b> ${score} / ${selectedTotal * 5}</p>
+    <p><b>Percentage:</b> ${percentage}%</p>
+
+    <button onclick="showSetup()">Start New Challenge</button>
+  </div>`;
 }
 
 function addBlock(){
   const block = document.createElement("div");
-  const types = ["block","block grass","block stone","block water"];
+  const types = ["block","block grass","block stone","block water","block gold"];
   block.className = types[Math.floor(Math.random()*types.length)];
   document.getElementById("blocks").appendChild(block);
 }
 
 function updateStats(){
   document.getElementById("score").innerHTML = score;
-  document.getElementById("lives").innerHTML = lives;
-  document.getElementById("blocksBuilt").innerHTML = blocksBuilt;
+  document.getElementById("correct").innerHTML = correct;
+  document.getElementById("wrong").innerHTML = wrong;
+  document.getElementById("skipped").innerHTML = skipped;
 }
 
-function winGame(){
-  document.querySelector(".world").innerHTML = `
-    <h1>🏆 Quest Complete!</h1>
-    <h2>You built your Science Base!</h2>
-    <p>Score: ${score}/100</p>
-    <p>Blocks Built: ${blocksBuilt}</p>
-    <button onclick="location.reload()">Play Again</button>
-  `;
+function updateTimer(){
+  const mins = Math.floor(sessionTime / 60);
+  const secs = sessionTime % 60;
+  const timer = document.getElementById("timer");
+
+  timer.innerHTML = `${String(mins).padStart(2,"0")}:${String(secs).padStart(2,"0")}`;
+
+  timer.className = "timer-good";
+  if(sessionTime <= 300) timer.className = "timer-warning";
+  if(sessionTime <= 60) timer.className = "timer-danger";
 }
 
-function gameOver(){
-  document.querySelector(".world").innerHTML = `
-    <h1>💀 Game Over</h1>
-    <h2>Your science base collapsed!</h2>
-    <p>Score: ${score}/100</p>
-    <button onclick="location.reload()">Try Again</button>
-  `;
+function shuffle(array){
+  for(let i=array.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [array[i],array[j]]=[array[j],array[i]];
+  }
+  return array;
 }
 
-loadQuestion();
+showSetup();
 </script>
-
 </body>
 </html>
