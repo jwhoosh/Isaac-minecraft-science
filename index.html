@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <title>Isaac BlockCraft Learning Quest</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <style>
 body{margin:0;font-family:Arial,sans-serif;background:#8fd3ff;text-align:center}
 .game{max-width:1000px;margin:auto;padding:20px}
@@ -15,8 +14,7 @@ button{display:block;width:92%;max-width:760px;margin:10px auto;padding:14px;fon
 button:hover{background:#5d4037}
 .option-btn{background:#2e7d32}
 .selected{background:#1565c0!important}
-.skip{background:#e65100}
-.hint{background:#f9a825;color:#222}
+.skip{background:#e65100}.hint{background:#f9a825;color:#222}
 .hint-box{background:#fff8e1;border:2px solid #f9a825;border-radius:10px;padding:12px;margin:12px auto;max-width:760px;font-weight:bold}
 .stats{font-size:18px;margin:10px}
 #feedback{font-weight:bold;font-size:18px;margin-top:15px}
@@ -57,86 +55,181 @@ Science:["Plants","Matter","Magnets","Forces","Life Cycles","Food Chains"],
 Mathematics:["Whole Numbers","Fractions","Decimals","Measurement","Geometry","Word Problems"]
 };
 
-const questions=[
-{subject:"Science",topic:"Plants",q:"A plant was kept in a dark cupboard but watered daily. After one week, its leaves turned yellow. Why?",options:["It did not get enough sunlight to make food.","It received too much water.","It had no oxygen.","It had too much soil."],answer:0,explain:"Plants need sunlight to make food.",hint:"Think about what plants need for photosynthesis."},
-{subject:"Science",topic:"Plants",q:"A pupil removed most leaves from a plant. The plant grew poorly. Why?",options:["It could not make enough food.","It could not absorb water.","It became heavier.","It received too much air."],answer:0,explain:"Leaves help plants make food.",hint:"Which part traps sunlight?"},
-{subject:"Science",topic:"Plants",q:"A seedling with damaged roots is likely to die. Why?",options:["It cannot absorb enough water and mineral salts.","It cannot attract bees.","It cannot make fruits immediately.","It cannot bend towards light."],answer:0,explain:"Roots absorb water and mineral salts.",hint:"Focus on the function of roots."},
-{subject:"Science",topic:"Plants",q:"Two similar plants were given the same amount of water. Plant A was placed near a window. Plant B was placed in a cupboard. Which plant will grow better?",options:["Plant A because it receives light.","Plant B because it is protected.","Both will grow the same.","Neither plant needs light."],answer:0,explain:"Plants need light to make food.",hint:"Which plant receives sunlight?"},
-{subject:"Science",topic:"Plants",q:"A plant has a weak stem. What problem is it most likely to face?",options:["It may not be held upright properly.","It cannot absorb sunlight directly from soil.","It will become magnetic.","It will not need roots."],answer:0,explain:"The stem supports the plant.",hint:"Think about what the stem does for the plant."},
+function makeQ(subject,topic,q,correct,wrong1,wrong2,wrong3,explain,hint){
+return{subject,topic,q,options:[String(correct),String(wrong1),String(wrong2),String(wrong3)],answer:0,explain,hint};
+}
 
-{subject:"Science",topic:"Matter",q:"Water droplets formed outside a cold cup. Where did they come from?",options:["Water vapour in the air condensed.","Water leaked through the cup.","The cup melted.","The drink passed through the cup."],answer:0,explain:"Water vapour condenses on cold surfaces.",hint:"The droplets came from the air."},
-{subject:"Science",topic:"Matter",q:"A wet shirt dries faster under the sun. Why?",options:["Heat speeds up evaporation.","Sunlight freezes water.","The shirt absorbs more water.","Air becomes solid."],answer:0,explain:"Heat increases evaporation.",hint:"Drying means liquid water changes into vapour."},
-{subject:"Science",topic:"Matter",q:"Ice cubes become water after being left outside. What happened?",options:["The ice gained heat and melted.","The ice lost heat and melted.","The water froze.","The air became colder."],answer:0,explain:"Ice melts when it gains heat.",hint:"Solid to liquid."},
-{subject:"Science",topic:"Matter",q:"A mirror becomes misty after a hot shower. What caused this?",options:["Condensation","Melting","Freezing","Burning"],answer:0,explain:"Water vapour cools and condenses on the mirror.",hint:"Gas changes into liquid droplets."},
-{subject:"Science",topic:"Matter",q:"Which towel will dry fastest?",options:["A towel under the sun with moving air.","A towel folded in a closed bag.","A towel inside a cold cupboard.","A towel placed in a sealed box."],answer:0,explain:"Heat and moving air increase evaporation.",hint:"Evaporation is faster with heat and wind."},
-
-{subject:"Science",topic:"Magnets",q:"A magnet attracts paper clips but not aluminium foil. What can you conclude?",options:["Only some metals are magnetic.","All metals are magnetic.","Aluminium is heavier.","Paper clips are not metal."],answer:0,explain:"Not all metals are magnetic.",hint:"Do not assume every metal is attracted to magnets."},
-{subject:"Science",topic:"Magnets",q:"Two magnets push away from each other. What is the likely reason?",options:["Like poles are facing each other.","Unlike poles are facing each other.","They are too heavy.","They have no poles."],answer:0,explain:"Like poles repel.",hint:"Same poles do not attract."},
-{subject:"Science",topic:"Magnets",q:"A steel pin moves towards a magnet even with paper between them. What does this show?",options:["Magnetic force can pass through some materials.","Paper is magnetic.","The pin became lighter.","The magnet touched the pin."],answer:0,explain:"Magnetic force can act through paper.",hint:"The magnet did not touch the pin."},
-{subject:"Science",topic:"Magnets",q:"Which object is most likely to be attracted by a magnet?",options:["Steel nail","Plastic ruler","Wooden stick","Rubber band"],answer:0,explain:"Steel is magnetic.",hint:"Look for iron or steel."},
-{subject:"Science",topic:"Magnets",q:"A pupil wants to find out whether an object is magnetic. What should he do?",options:["Bring a magnet near the object.","Put the object in water.","Weigh the object.","Heat the object."],answer:0,explain:"A magnet can test whether an object is magnetic.",hint:"Use a magnet to test attraction."},
-
-{subject:"Science",topic:"Forces",q:"A toy car travels further on smooth tiles than on carpet. Why?",options:["There is less friction on tiles.","There is more gravity on carpet.","The car is heavier on carpet.","Tiles push the car."],answer:0,explain:"Less friction allows it to travel further.",hint:"Rough surfaces slow objects more."},
-{subject:"Science",topic:"Forces",q:"A ball slows down after rolling on the floor. Which force causes this?",options:["Friction","Magnetism","Light","Electricity"],answer:0,explain:"Friction slows moving objects.",hint:"This force acts against motion."},
-{subject:"Science",topic:"Forces",q:"Why do shoes usually have grooves at the bottom?",options:["To increase friction and prevent slipping.","To reduce weight only.","To make shoes magnetic.","To absorb sunlight."],answer:0,explain:"Grooves increase friction.",hint:"Think about grip."},
-{subject:"Science",topic:"Forces",q:"A pupil rubs his hands together and feels warmth. Why?",options:["Friction produces heat.","Gravity produces heat.","Light produces water.","Magnetism produces air."],answer:0,explain:"Friction can produce heat.",hint:"Rubbing creates friction."},
-{subject:"Science",topic:"Forces",q:"A parachute helps a person fall more slowly. Why?",options:["It increases air resistance.","It removes gravity.","It makes the person weightless.","It turns air into liquid."],answer:0,explain:"Air resistance slows falling objects.",hint:"Think about the force from air."},
-
-{subject:"Science",topic:"Life Cycles",q:"A caterpillar was found after eggs hatched on a leaf. Which animal is likely being observed?",options:["Butterfly","Chicken","Fish","Cat"],answer:0,explain:"Butterfly eggs hatch into caterpillars.",hint:"Which animal has a caterpillar stage?"},
-{subject:"Science",topic:"Life Cycles",q:"A tadpole develops legs and later becomes an adult frog. What is this change called?",options:["Metamorphosis","Evaporation","Condensation","Magnetisation"],answer:0,explain:"Frogs undergo metamorphosis.",hint:"A major body-form change."},
-{subject:"Science",topic:"Life Cycles",q:"Why are fruits important in a plant life cycle?",options:["They contain seeds for reproduction.","They absorb water.","They hold the plant upright.","They make all food."],answer:0,explain:"Fruits usually contain seeds.",hint:"Think about how new plants grow."},
-{subject:"Science",topic:"Life Cycles",q:"Which stage comes after caterpillar in a butterfly life cycle?",options:["Pupa","Egg","Adult fish","Seed"],answer:0,explain:"The caterpillar becomes a pupa.",hint:"It is the stage before adult butterfly."},
-{subject:"Science",topic:"Life Cycles",q:"A seed did not germinate in a dry dish. Why?",options:["It did not have enough water.","It had too much light.","It had too much space.","It was too round."],answer:0,explain:"Seeds need water to germinate.",hint:"Dry seeds usually do not start growing."},
-
-{subject:"Science",topic:"Food Chains",q:"Grass → Grasshopper → Frog → Snake. If grass decreases greatly, what may happen?",options:["Grasshoppers may decrease.","Frogs will make food.","Snakes become producers.","Grasshoppers need no food."],answer:0,explain:"Grasshoppers depend on grass.",hint:"Look at what eats grass directly."},
-{subject:"Science",topic:"Food Chains",q:"Grass → Rabbit → Eagle. If rabbits decrease, what may happen to eagles?",options:["Eagles may have less food.","Eagles will eat grass only.","Eagles become plants.","Rabbits become producers."],answer:0,explain:"Eagles depend on rabbits.",hint:"What does the eagle eat?"},
-{subject:"Science",topic:"Food Chains",q:"Why does every food chain usually begin with a plant?",options:["Plants can make their own food.","Plants eat animals.","Plants hunt insects only.","Plants do not need sunlight."],answer:0,explain:"Plants are producers.",hint:"Producers start food chains."},
-{subject:"Science",topic:"Food Chains",q:"In a pond, water plants are eaten by small fish. Small fish are eaten by big fish. If small fish decrease, what may happen?",options:["Big fish may have less food.","Water plants disappear immediately.","Big fish will make their own food.","Small fish become producers."],answer:0,explain:"Big fish depend on small fish for food.",hint:"Follow the food relationship."},
-{subject:"Science",topic:"Food Chains",q:"Which is a correct food chain?",options:["Grass → Deer → Tiger","Tiger → Deer → Grass","Deer → Grass → Tiger","Grass → Tiger → Deer"],answer:0,explain:"Energy flows from plant to plant-eater to predator.",hint:"Start with the producer."},
-
-{subject:"Mathematics",topic:"Whole Numbers",q:"What is 4,208 + 3,759?",options:["7,967","7,957","8,067","6,967"],answer:0,explain:"4,208 + 3,759 = 7,967.",hint:"Add ones, tens, hundreds and thousands carefully."},
-{subject:"Mathematics",topic:"Whole Numbers",q:"A shop sold 2,468 apples in the morning and 1,735 apples in the afternoon. How many apples were sold altogether?",options:["4,203","4,103","3,203","4,293"],answer:0,explain:"2,468 + 1,735 = 4,203.",hint:"Altogether means addition."},
-{subject:"Mathematics",topic:"Whole Numbers",q:"There are 6 boxes. Each box has 48 pencils. How many pencils are there altogether?",options:["288","248","268","308"],answer:0,explain:"6 × 48 = 288.",hint:"Equal groups mean multiplication."},
-{subject:"Mathematics",topic:"Whole Numbers",q:"What is 9,000 - 4,675?",options:["4,325","5,325","4,425","3,325"],answer:0,explain:"9,000 - 4,675 = 4,325.",hint:"Subtract carefully with regrouping."},
-{subject:"Mathematics",topic:"Whole Numbers",q:"A number rounded to the nearest hundred is 3,500. Which number could it be?",options:["3,462","3,449","3,551","3,399"],answer:0,explain:"3,462 rounds to 3,500.",hint:"Look at the tens digit."},
-
-{subject:"Mathematics",topic:"Fractions",q:"Which fraction is equivalent to 1/2?",options:["2/4","1/3","3/5","2/5"],answer:0,explain:"1/2 = 2/4.",hint:"Equivalent fractions have the same value."},
-{subject:"Mathematics",topic:"Fractions",q:"Isaac ate 3/8 of a pizza. His brother ate 2/8. How much did they eat altogether?",options:["5/8","1/8","6/8","5/16"],answer:0,explain:"3/8 + 2/8 = 5/8.",hint:"Same denominator, add the numerators."},
-{subject:"Mathematics",topic:"Fractions",q:"A ribbon is 1 metre long. Mei used 3/10 metre. How much ribbon is left?",options:["7/10 metre","3/10 metre","4/10 metre","6/10 metre"],answer:0,explain:"1 - 3/10 = 7/10.",hint:"1 whole = 10/10."},
-{subject:"Mathematics",topic:"Fractions",q:"Which is larger?",options:["3/4","2/4","1/4","0/4"],answer:0,explain:"3/4 is the largest.",hint:"Same denominator, compare numerators."},
-{subject:"Mathematics",topic:"Fractions",q:"A cake is cut into 6 equal pieces. Isaac eats 2 pieces. What fraction did he eat?",options:["2/6","6/2","4/6","1/6"],answer:0,explain:"He ate 2 out of 6 pieces, so 2/6.",hint:"Fraction means parts eaten over total parts."},
-
-{subject:"Mathematics",topic:"Decimals",q:"What is 3.4 + 2.5?",options:["5.9","5.8","6.9","4.9"],answer:0,explain:"3.4 + 2.5 = 5.9.",hint:"Line up the decimal points."},
-{subject:"Mathematics",topic:"Decimals",q:"Which decimal is equal to 7/10?",options:["0.7","0.07","7.0","0.17"],answer:0,explain:"7/10 = 0.7.",hint:"Tenths are one digit after the decimal point."},
-{subject:"Mathematics",topic:"Decimals",q:"A bottle has 1.5 litres of water. Isaac drinks 0.4 litres. How much is left?",options:["1.1 litres","1.9 litres","0.9 litres","1.0 litres"],answer:0,explain:"1.5 - 0.4 = 1.1.",hint:"Left means subtract."},
-{subject:"Mathematics",topic:"Decimals",q:"Which number is the greatest?",options:["2.8","2.08","2.18","2.38"],answer:0,explain:"2.8 is the greatest.",hint:"Compare the tenths first."},
-{subject:"Mathematics",topic:"Decimals",q:"What is 6.7 - 2.3?",options:["4.4","4.3","5.4","3.4"],answer:0,explain:"6.7 - 2.3 = 4.4.",hint:"Subtract tenths from tenths."},
-
-{subject:"Mathematics",topic:"Measurement",q:"A rope is 3 m 40 cm long. How many centimetres is this?",options:["340 cm","304 cm","3,040 cm","430 cm"],answer:0,explain:"3 m = 300 cm, so 300 + 40 = 340 cm.",hint:"1 m = 100 cm."},
-{subject:"Mathematics",topic:"Measurement",q:"A movie starts at 2:15 pm and ends at 3:45 pm. How long is the movie?",options:["1 h 30 min","1 h 15 min","2 h","90 h"],answer:0,explain:"From 2:15 to 3:45 is 1 hour 30 minutes.",hint:"Count from start time to end time."},
-{subject:"Mathematics",topic:"Measurement",q:"A packet has a mass of 2 kg 300 g. What is this in grams?",options:["2300 g","2030 g","2003 g","3200 g"],answer:0,explain:"2 kg = 2000 g, plus 300 g = 2300 g.",hint:"1 kg = 1000 g."},
-{subject:"Mathematics",topic:"Measurement",q:"A tank holds 5 litres of water. How many millilitres is this?",options:["5000 ml","500 ml","50 ml","550 ml"],answer:0,explain:"5 litres = 5000 ml.",hint:"1 litre = 1000 ml."},
-{subject:"Mathematics",topic:"Measurement",q:"A pencil is 15 cm long. 4 such pencils are placed end to end. What is the total length?",options:["60 cm","45 cm","75 cm","50 cm"],answer:0,explain:"15 × 4 = 60 cm.",hint:"Repeated equal length means multiplication."},
-
-{subject:"Mathematics",topic:"Geometry",q:"How many right angles does a rectangle have?",options:["4","2","3","1"],answer:0,explain:"A rectangle has 4 right angles.",hint:"Each corner of a rectangle is a right angle."},
-{subject:"Mathematics",topic:"Geometry",q:"A square has a side length of 6 cm. What is its perimeter?",options:["24 cm","12 cm","36 cm","18 cm"],answer:0,explain:"6 × 4 = 24 cm.",hint:"Perimeter is the total distance around."},
-{subject:"Mathematics",topic:"Geometry",q:"Which angle is smaller than a right angle?",options:["Acute angle","Obtuse angle","Straight angle","Reflex angle"],answer:0,explain:"An acute angle is less than 90°.",hint:"A right angle is 90°."},
-{subject:"Mathematics",topic:"Geometry",q:"Which shape has 3 sides?",options:["Triangle","Square","Rectangle","Pentagon"],answer:0,explain:"A triangle has 3 sides.",hint:"Tri means three."},
-{subject:"Mathematics",topic:"Geometry",q:"A rectangle has length 8 cm and breadth 3 cm. What is its perimeter?",options:["22 cm","24 cm","11 cm","18 cm"],answer:0,explain:"8 + 3 + 8 + 3 = 22 cm.",hint:"Add all four sides."},
-
-{subject:"Mathematics",topic:"Word Problems",q:"A book costs $12. Isaac buys 4 books. How much does he pay?",options:["$48","$36","$16","$42"],answer:0,explain:"12 × 4 = 48.",hint:"Same price repeated means multiplication."},
-{subject:"Mathematics",topic:"Word Problems",q:"There are 96 sweets shared equally among 8 children. How many sweets does each child get?",options:["12","10","14","16"],answer:0,explain:"96 ÷ 8 = 12.",hint:"Shared equally means division."},
-{subject:"Mathematics",topic:"Word Problems",q:"Isaac had $50. He bought a toy for $18 and a book for $12. How much money was left?",options:["$20","$30","$24","$18"],answer:0,explain:"18 + 12 = 30. 50 - 30 = 20.",hint:"Find total spent first."},
-{subject:"Mathematics",topic:"Word Problems",q:"A class has 32 pupils. They are arranged equally into 4 groups. How many pupils are in each group?",options:["8","6","7","9"],answer:0,explain:"32 ÷ 4 = 8.",hint:"Equal groups means divide."},
-{subject:"Mathematics",topic:"Word Problems",q:"A shopkeeper packs 7 oranges into each bag. He packs 9 bags. How many oranges are packed?",options:["63","56","72","16"],answer:0,explain:"7 × 9 = 63.",hint:"Equal groups mean multiplication."}
+const scienceQuestions=[
+makeQ("Science","Plants","A plant was kept in a dark cupboard but watered daily. After one week, its leaves turned yellow. Why?","It did not get enough sunlight to make food.","It received too much water.","It had no oxygen.","It had too much soil.","Plants need sunlight to make food.","Think about what plants need for photosynthesis."),
+makeQ("Science","Plants","A pupil removed most leaves from a plant. The plant grew poorly. Why?","It could not make enough food.","It could not absorb water.","It became heavier.","It received too much air.","Leaves help plants make food.","Which part traps sunlight?"),
+makeQ("Science","Matter","Water droplets formed outside a cold cup. Where did they come from?","Water vapour in the air condensed.","Water leaked through the cup.","The cup melted.","The drink passed through the cup.","Water vapour condenses on cold surfaces.","The droplets came from the air."),
+makeQ("Science","Matter","A wet shirt dries faster under the sun. Why?","Heat speeds up evaporation.","Sunlight freezes water.","The shirt absorbs more water.","Air becomes solid.","Heat increases evaporation.","Drying means liquid water changes into vapour."),
+makeQ("Science","Magnets","A magnet attracts paper clips but not aluminium foil. What can you conclude?","Only some metals are magnetic.","All metals are magnetic.","Aluminium is heavier.","Paper clips are not metal.","Not all metals are magnetic.","Do not assume every metal is attracted to magnets."),
+makeQ("Science","Forces","A toy car travels further on smooth tiles than on carpet. Why?","There is less friction on tiles.","There is more gravity on carpet.","The car is heavier on carpet.","Tiles push the car.","Less friction allows it to travel further.","Rough surfaces slow objects more."),
+makeQ("Science","Life Cycles","A caterpillar was found after eggs hatched on a leaf. Which animal is likely being observed?","Butterfly","Chicken","Fish","Cat","Butterfly eggs hatch into caterpillars.","Which animal has a caterpillar stage?"),
+makeQ("Science","Food Chains","Grass → Grasshopper → Frog → Snake. If grass decreases greatly, what may happen?","Grasshoppers may decrease.","Frogs will make food.","Snakes become producers.","Grasshoppers need no food.","Grasshoppers depend on grass.","Look at what eats grass directly.")
 ];
 
-let questionBank=[];
-for(let i=0;i<5;i++){
-  questions.forEach((q,index)=>{
-    questionBank.push({...q,id:q.subject+"-"+q.topic+"-"+index+"-"+i});
-  });
+function generateMathQuestions(){
+let qs=[];
+
+/* 150 Whole Numbers */
+for(let i=0;i<150;i++){
+let type=i%5;
+if(type===0){
+let a=1200+i*37,b=850+i*29,ans=a+b;
+qs.push(makeQ("Mathematics","Whole Numbers",`What is ${a.toLocaleString()} + ${b.toLocaleString()}?`,ans.toLocaleString(),(ans+100).toLocaleString(),(ans-10).toLocaleString(),(ans+1000).toLocaleString(),`${a.toLocaleString()} + ${b.toLocaleString()} = ${ans.toLocaleString()}.`,"Add by place value."));
 }
+if(type===1){
+let a=9000+i*31,b=2400+i*17,ans=a-b;
+qs.push(makeQ("Mathematics","Whole Numbers",`What is ${a.toLocaleString()} - ${b.toLocaleString()}?`,ans.toLocaleString(),(ans+100).toLocaleString(),(ans-100).toLocaleString(),(ans+10).toLocaleString(),`${a.toLocaleString()} - ${b.toLocaleString()} = ${ans.toLocaleString()}.`,"Subtract carefully with regrouping."));
+}
+if(type===2){
+let a=23+(i%40),b=3+(i%9),ans=a*b;
+qs.push(makeQ("Mathematics","Whole Numbers",`There are ${b} boxes. Each box has ${a} pencils. How many pencils are there altogether?`,ans,ans+b,ans-a,a+b,`${a} × ${b} = ${ans}.`,"Equal groups mean multiplication."));
+}
+if(type===3){
+let b=3+(i%9),ans=12+(i%30),total=b*ans;
+qs.push(makeQ("Mathematics","Whole Numbers",`${total} stickers are shared equally among ${b} pupils. How many stickers does each pupil get?`,ans,ans+1,ans-1,total-b,`${total} ÷ ${b} = ${ans}.`,"Shared equally means division."));
+}
+if(type===4){
+let n=3400+i*13,rounded=Math.round(n/100)*100;
+qs.push(makeQ("Mathematics","Whole Numbers",`Round ${n.toLocaleString()} to the nearest hundred.`,rounded.toLocaleString(),(rounded+100).toLocaleString(),(rounded-100).toLocaleString(),n.toLocaleString(),`${n.toLocaleString()} rounds to ${rounded.toLocaleString()}.`,"Look at the tens digit."));
+}
+}
+
+/* 150 Fractions */
+for(let i=0;i<150;i++){
+let d=[6,8,10,12,15][i%5];
+let n1=(i%(d-3))+1,n2=((i+2)%(d-3))+1;
+if(n1+n2>=d){n1=1;n2=2;}
+let ansN=n1+n2;
+let type=i%4;
+if(type===0){
+qs.push(makeQ("Mathematics","Fractions",`Isaac ate ${n1}/${d} of a cake and his sister ate ${n2}/${d}. How much did they eat altogether?`,`${ansN}/${d}`,`${Math.max(1,ansN-1)}/${d}`,`${ansN}/${d*2}`,`${n1*n2}/${d}`,`${n1}/${d} + ${n2}/${d} = ${ansN}/${d}.`,"Same denominator: add numerators."));
+}
+if(type===1){
+let used=n1,left=d-used;
+qs.push(makeQ("Mathematics","Fractions",`A ribbon is 1 metre long. Mei used ${used}/${d} metre. How much ribbon is left?`,`${left}/${d}`,`${used}/${d}`,`${left-1}/${d}`,`${left}/${d*2}`,`1 = ${d}/${d}. ${d}/${d} - ${used}/${d} = ${left}/${d}.`,"One whole has the same numerator and denominator."));
+}
+if(type===2){
+let a=n1,b=n2;
+let larger=Math.max(a,b);
+qs.push(makeQ("Mathematics","Fractions",`Which fraction is larger?`,`${larger}/${d}`,`${Math.min(a,b)}/${d}`,`1/${d}`,`0/${d}`,`With the same denominator, the larger numerator is greater.`,"Compare the numerators."));
+}
+if(type===3){
+let whole=d,part=n1;
+qs.push(makeQ("Mathematics","Fractions",`A pizza is cut into ${whole} equal slices. Isaac eats ${part} slices. What fraction did he eat?`,`${part}/${whole}`,`${whole}/${part}`,`${whole-part}/${whole}`,`${part}/${whole+part}`,`He ate ${part} out of ${whole} slices.`,"Fraction = parts eaten over total parts."));
+}
+}
+
+/* 150 Decimals */
+for(let i=0;i<150;i++){
+let type=i%5;
+let a=Number((1.1+(i%40)*0.2).toFixed(1));
+let b=Number((0.3+(i%20)*0.1).toFixed(1));
+if(type===0){
+let ans=(a+b).toFixed(1);
+qs.push(makeQ("Mathematics","Decimals",`What is ${a.toFixed(1)} + ${b.toFixed(1)}?`,ans,(Number(ans)+0.1).toFixed(1),(Number(ans)-0.1).toFixed(1),(Number(ans)+1).toFixed(1),`${a.toFixed(1)} + ${b.toFixed(1)} = ${ans}.`,"Line up decimal points."));
+}
+if(type===1){
+let ans=(a+3-b).toFixed(1);
+qs.push(makeQ("Mathematics","Decimals",`What is ${(a+3).toFixed(1)} - ${b.toFixed(1)}?`,ans,(Number(ans)+0.1).toFixed(1),(Number(ans)-0.1).toFixed(1),(Number(ans)+1).toFixed(1),`${(a+3).toFixed(1)} - ${b.toFixed(1)} = ${ans}.`,"Subtract tenths from tenths."));
+}
+if(type===2){
+let n=(i%9)+1;
+qs.push(makeQ("Mathematics","Decimals",`Which decimal is equal to ${n}/10?`,(n/10).toFixed(1),(n/100).toFixed(2),`${n}.0`,(n/10+0.1).toFixed(1),`${n}/10 = ${(n/10).toFixed(1)}.`,"Tenths have one digit after the decimal point."));
+}
+if(type===3){
+let nums=[2.8,2.08,2.18,2.38].map(x=>Number((x+(i%5)).toFixed(2)));
+let max=Math.max(...nums);
+qs.push(makeQ("Mathematics","Decimals",`Which number is the greatest?`,max.toString(),nums[1].toString(),nums[2].toString(),nums[3].toString(),`${max} is the greatest.`,"Compare whole numbers, then tenths."));
+}
+if(type===4){
+let total=Number((2.5+(i%20)*0.2).toFixed(1));
+let drank=Number((0.4+(i%8)*0.1).toFixed(1));
+let ans=(total-drank).toFixed(1);
+qs.push(makeQ("Mathematics","Decimals",`A bottle has ${total.toFixed(1)} litres of water. Isaac drinks ${drank.toFixed(1)} litres. How much is left?`,`${ans} litres`,`${(Number(ans)+0.1).toFixed(1)} litres`,`${(Number(ans)-0.1).toFixed(1)} litres`,`${(total+drank).toFixed(1)} litres`,`${total.toFixed(1)} - ${drank.toFixed(1)} = ${ans}.`,"Left means subtract."));
+}
+}
+
+/* 150 Measurement */
+for(let i=0;i<150;i++){
+let type=i%5;
+if(type===0){
+let m=1+(i%9),cm=10+(i%8)*5,ans=m*100+cm;
+qs.push(makeQ("Mathematics","Measurement",`A rope is ${m} m ${cm} cm long. How many centimetres is this?`,`${ans} cm`,`${ans+10} cm`,`${ans-10} cm`,`${m}${cm} cm`,`${m} m = ${m*100} cm. Total = ${ans} cm.`,"1 m = 100 cm."));
+}
+if(type===1){
+let kg=1+(i%8),g=100+(i%8)*50,ans=kg*1000+g;
+qs.push(makeQ("Mathematics","Measurement",`A packet has a mass of ${kg} kg ${g} g. What is this in grams?`,`${ans} g`,`${ans+100} g`,`${kg}${g} g`,`${ans-100} g`,`${kg} kg = ${kg*1000} g. Total = ${ans} g.`,"1 kg = 1000 g."));
+}
+if(type===2){
+let l=1+(i%9),ans=l*1000;
+qs.push(makeQ("Mathematics","Measurement",`A tank holds ${l} litres of water. How many millilitres is this?`,`${ans} ml`,`${ans/10} ml`,`${ans+500} ml`,`${l*100} ml`,`${l} litres = ${ans} ml.`,"1 litre = 1000 ml."));
+}
+if(type===3){
+let startH=1+(i%10),startM=[0,15,30][i%3],dur=45+(i%4)*15;
+let endM=startM+dur,endH=startH+Math.floor(endM/60);endM=endM%60;
+qs.push(makeQ("Mathematics","Measurement",`A lesson starts at ${startH}:${String(startM).padStart(2,"0")} pm and ends at ${endH}:${String(endM).padStart(2,"0")} pm. How long is the lesson?`,`${dur} min`,`${dur+15} min`,`${dur-15} min`,`${dur+30} min`,`The duration is ${dur} minutes.`,"Count from start time to end time."));
+}
+if(type===4){
+let length=8+(i%20),qty=2+(i%8),ans=length*qty;
+qs.push(makeQ("Mathematics","Measurement",`A pencil is ${length} cm long. ${qty} such pencils are placed end to end. What is the total length?`,`${ans} cm`,`${ans+length} cm`,`${ans-qty} cm`,`${length+qty} cm`,`${length} × ${qty} = ${ans} cm.`,"Repeated equal length means multiplication."));
+}
+}
+
+/* 150 Geometry */
+for(let i=0;i<150;i++){
+let type=i%5;
+if(type===0){
+let s=3+(i%20),ans=s*4;
+qs.push(makeQ("Mathematics","Geometry",`A square has a side length of ${s} cm. What is its perimeter?`,`${ans} cm`,`${s*s} cm`,`${s+4} cm`,`${ans+4} cm`,`Perimeter of square = ${s} × 4 = ${ans} cm.`,"A square has 4 equal sides."));
+}
+if(type===1){
+let l=5+(i%18),b=2+(i%9),ans=2*(l+b);
+qs.push(makeQ("Mathematics","Geometry",`A rectangle has length ${l} cm and breadth ${b} cm. What is its perimeter?`,`${ans} cm`,`${l*b} cm`,`${l+b} cm`,`${ans+2} cm`,`Perimeter = ${l}+${b}+${l}+${b} = ${ans} cm.`,"Add all four sides."));
+}
+if(type===2){
+qs.push(makeQ("Mathematics","Geometry",`Which shape has 3 sides?`,"Triangle","Square","Rectangle","Pentagon","A triangle has 3 sides.","Tri means three."));
+}
+if(type===3){
+qs.push(makeQ("Mathematics","Geometry",`Which angle is smaller than a right angle?`,"Acute angle","Obtuse angle","Straight angle","Reflex angle","An acute angle is less than 90°.","A right angle is 90°."));
+}
+if(type===4){
+qs.push(makeQ("Mathematics","Geometry",`How many right angles does a rectangle have?`,"4","2","3","1","A rectangle has 4 right angles.","Each corner of a rectangle is a right angle."));
+}
+}
+
+/* 150 Word Problems */
+for(let i=0;i<150;i++){
+let type=i%5;
+if(type===0){
+let price=5+(i%16),qty=2+(i%9),ans=price*qty;
+qs.push(makeQ("Mathematics","Word Problems",`A book costs $${price}. Isaac buys ${qty} books. How much does he pay?`,`$${ans}`,`$${ans+price}`,`$${ans-qty}`,`$${price+qty}`,`${price} × ${qty} = ${ans}.`,"Same price repeated means multiplication."));
+}
+if(type===1){
+let children=3+(i%9),each=8+(i%15),total=children*each;
+qs.push(makeQ("Mathematics","Word Problems",`${total} sweets are shared equally among ${children} children. How many sweets does each child get?`,each,each+1,each-1,total-children,`${total} ÷ ${children} = ${each}.`,"Shared equally means division."));
+}
+if(type===2){
+let money=50+(i%10)*10,toy=12+(i%15),book=8+(i%12),left=money-toy-book;
+qs.push(makeQ("Mathematics","Word Problems",`Isaac had $${money}. He bought a toy for $${toy} and a book for $${book}. How much money was left?`,`$${left}`,`$${money-toy}`,`$${money-book}`,`$${toy+book}`,`${toy}+${book}=${toy+book}. ${money}-${toy+book}=${left}.`,"Find total spent first."));
+}
+if(type===3){
+let groups=2+(i%8),per=6+(i%20),total=groups*per;
+qs.push(makeQ("Mathematics","Word Problems",`A class has ${total} pupils arranged equally into ${groups} groups. How many pupils are in each group?`,per,per+1,per-1,total-groups,`${total} ÷ ${groups} = ${per}.`,"Equal groups means divide."));
+}
+if(type===4){
+let bags=3+(i%10),oranges=5+(i%12),ans=bags*oranges;
+qs.push(makeQ("Mathematics","Word Problems",`A shopkeeper packs ${oranges} oranges into each bag. He packs ${bags} bags. How many oranges are packed?`,ans,ans+oranges,ans-bags,bags+oranges,`${oranges} × ${bags} = ${ans}.`,"Equal groups mean multiplication."));
+}
+}
+
+return qs;
+}
+
+let questions=[...scienceQuestions,...generateMathQuestions()];
 
 let selectedSubject="Science";
 let selectedTopics=[];
@@ -147,282 +240,289 @@ let current=0,score=0,correct=0,wrong=0,skipped=0,hintsUsed=0;
 let timerInterval;
 
 function showSetup(){
-  clearInterval(timerInterval);
-  document.getElementById("stats").style.display="none";
-  document.getElementById("blocks").innerHTML="";
+clearInterval(timerInterval);
+document.getElementById("stats").style.display="none";
+document.getElementById("blocks").innerHTML="";
 
-  document.getElementById("screen").innerHTML=`
-  <div class="card">
-    <h2>Choose Your Challenge</h2>
+document.getElementById("screen").innerHTML=`
+<div class="card">
+<h2>Choose Your Challenge</h2>
 
-    <h3>1. Select Subject</h3>
-    <button class="option-btn ${selectedSubject==="Science"?"selected":""}" onclick="selectSubject('Science')">Science</button>
-    <button class="option-btn ${selectedSubject==="Mathematics"?"selected":""}" onclick="selectSubject('Mathematics')">Mathematics</button>
+<h3>1. Select Subject</h3>
+<button class="option-btn ${selectedSubject==="Science"?"selected":""}" onclick="selectSubject('Science')">Science</button>
+<button class="option-btn ${selectedSubject==="Mathematics"?"selected":""}" onclick="selectSubject('Mathematics')">Mathematics</button>
 
-    <h3>2. Select Topics</h3>
-    <div id="topicButtons"></div>
+<h3>2. Select Topics</h3>
+<div id="topicButtons"></div>
 
-    <h3>3. Select Number of Questions</h3>
-    <button id="q20" class="option-btn" onclick="selectTotal(20)">20 Questions</button>
-    <button id="q30" class="option-btn" onclick="selectTotal(30)">30 Questions</button>
-    <button id="q40" class="option-btn" onclick="selectTotal(40)">40 Questions</button>
+<h3>3. Select Number of Questions</h3>
+<button id="q20" class="option-btn" onclick="selectTotal(20)">20 Questions</button>
+<button id="q30" class="option-btn" onclick="selectTotal(30)">30 Questions</button>
+<button id="q40" class="option-btn" onclick="selectTotal(40)">40 Questions</button>
 
-    <p id="topicWarning" class="warning">Please select at least one topic.</p>
+<p id="topicWarning" class="warning">Please select at least one topic.</p>
 
-    <p class="small">
-      Select one or multiple topics.<br>
-      Timer is for the whole session. Each question has one optional hint.
-    </p>
+<p class="small">
+Mathematics now has 900 generated questions: 150 per topic.<br>
+Select one or multiple topics. Timer is for the whole session.
+</p>
 
-    <button onclick="startTest()">Start Challenge</button>
-  </div>`;
+<button onclick="startTest()">Start Challenge</button>
+</div>`;
 
-  renderTopicButtons();
-  refreshTopicButtons();
-  refreshQuestionButtons();
+renderTopicButtons();
+refreshTopicButtons();
+refreshQuestionButtons();
 }
 
 function selectSubject(subject){
-  selectedSubject=subject;
-  selectedTopics=[];
-  showSetup();
+selectedSubject=subject;
+selectedTopics=[];
+showSetup();
 }
 
 function renderTopicButtons(){
-  let html="";
-  subjects[selectedSubject].forEach(topic=>{
-    html+=`<button id="topic-${safeId(topic)}" class="option-btn" onclick="toggleTopic('${topic}')">${topic}</button>`;
-  });
-  document.getElementById("topicButtons").innerHTML=html;
+let html="";
+subjects[selectedSubject].forEach(topic=>{
+html+=`<button id="topic-${safeId(topic)}" class="option-btn" onclick="toggleTopic('${topic}')">${topic}</button>`;
+});
+document.getElementById("topicButtons").innerHTML=html;
 }
 
 function toggleTopic(topic){
-  if(selectedTopics.includes(topic)){
-    selectedTopics=selectedTopics.filter(t=>t!==topic);
-  }else{
-    selectedTopics.push(topic);
-  }
-  refreshTopicButtons();
+if(selectedTopics.includes(topic)){
+selectedTopics=selectedTopics.filter(t=>t!==topic);
+}else{
+selectedTopics.push(topic);
+}
+refreshTopicButtons();
 }
 
 function refreshTopicButtons(){
-  subjects[selectedSubject].forEach(topic=>{
-    const btn=document.getElementById("topic-"+safeId(topic));
-    if(btn) btn.classList.toggle("selected",selectedTopics.includes(topic));
-  });
+subjects[selectedSubject].forEach(topic=>{
+const btn=document.getElementById("topic-"+safeId(topic));
+if(btn) btn.classList.toggle("selected",selectedTopics.includes(topic));
+});
 
-  const warning=document.getElementById("topicWarning");
-  if(warning){
-    warning.innerHTML=selectedTopics.length===0?"Please select at least one topic.":"Selected topics: "+selectedTopics.join(", ");
-  }
+const warning=document.getElementById("topicWarning");
+if(warning){
+warning.innerHTML=selectedTopics.length===0?"Please select at least one topic.":"Selected topics: "+selectedTopics.join(", ");
+}
 }
 
 function selectTotal(total){
-  selectedTotal=total;
-  sessionTime=total*60;
-  refreshQuestionButtons();
+selectedTotal=total;
+sessionTime=total*60;
+refreshQuestionButtons();
 }
 
 function refreshQuestionButtons(){
-  [20,30,40].forEach(n=>{
-    const btn=document.getElementById("q"+n);
-    if(btn) btn.classList.toggle("selected",selectedTotal===n);
-  });
+[20,30,40].forEach(n=>{
+const btn=document.getElementById("q"+n);
+if(btn) btn.classList.toggle("selected",selectedTotal===n);
+});
 }
 
 function startTest(){
-  if(selectedTopics.length===0){
-    document.getElementById("topicWarning").innerHTML="Please select at least one topic.";
-    return;
-  }
+if(selectedTopics.length===0){
+document.getElementById("topicWarning").innerHTML="Please select at least one topic.";
+return;
+}
 
-  current=0;score=0;correct=0;wrong=0;skipped=0;hintsUsed=0;
-  document.getElementById("blocks").innerHTML="";
+current=0;score=0;correct=0;wrong=0;skipped=0;hintsUsed=0;
+document.getElementById("blocks").innerHTML="";
 
-  let pool=questionBank.filter(q=>q.subject===selectedSubject && selectedTopics.includes(q.topic));
-  testQuestions=buildRandomTest(pool,selectedTotal);
-  sessionTime=selectedTotal*60;
+let pool=questions.filter(q=>q.subject===selectedSubject && selectedTopics.includes(q.topic));
+testQuestions=buildRandomTest(pool,selectedTotal);
+sessionTime=selectedTotal*60;
 
-  document.getElementById("stats").style.display="block";
-  document.getElementById("subjectLabel").innerHTML=selectedSubject;
-  updateStats();
-  updateTimer();
+document.getElementById("stats").style.display="block";
+document.getElementById("subjectLabel").innerHTML=selectedSubject;
+updateStats();
+updateTimer();
 
-  timerInterval=setInterval(()=>{
-    sessionTime--;
-    updateTimer();
-    if(sessionTime<=0) endByTime();
-  },1000);
+timerInterval=setInterval(()=>{
+sessionTime--;
+updateTimer();
+if(sessionTime<=0) endByTime();
+},1000);
 
-  loadQuestion();
+loadQuestion();
 }
 
 function buildRandomTest(pool,total){
-  let result=[],available=shuffle([...pool]),lastText="";
-  while(result.length<total){
-    if(available.length===0) available=shuffle([...pool]);
-    let idx=available.findIndex(q=>q.q!==lastText);
-    if(idx===-1) idx=0;
-    let picked=available.splice(idx,1)[0];
-    picked={...picked,hintUsedThisQuestion:false,shuffled:shuffleAnswerOptions(picked.options,picked.answer)};
-    result.push(picked);
-    lastText=picked.q;
-  }
-  return result;
+let result=[],available=shuffle([...pool]),usedTexts=new Set(),lastText="";
+while(result.length<total){
+if(available.length===0){
+available=shuffle(pool.filter(q=>!usedTexts.has(q.q)));
+if(available.length===0){
+usedTexts.clear();
+available=shuffle([...pool]);
+}
+}
+let idx=available.findIndex(q=>q.q!==lastText);
+if(idx===-1) idx=0;
+let picked=available.splice(idx,1)[0];
+usedTexts.add(picked.q);
+picked={...picked,hintUsedThisQuestion:false,shuffled:shuffleAnswerOptions(picked.options,picked.answer)};
+result.push(picked);
+lastText=picked.q;
+}
+return result;
 }
 
 function shuffleAnswerOptions(options,answerIndex){
-  let arr=options.map((text,i)=>({text,correct:i===answerIndex}));
-  arr=shuffle(arr);
-  return{choices:arr.map(x=>x.text),answer:arr.findIndex(x=>x.correct)};
+let arr=options.map((text,i)=>({text,correct:i===answerIndex}));
+arr=shuffle(arr);
+return{choices:arr.map(x=>x.text),answer:arr.findIndex(x=>x.correct)};
 }
 
 function loadQuestion(){
-  const q=testQuestions[current];
-  const progress=(current/selectedTotal)*100;
+const q=testQuestions[current];
+const progress=(current/selectedTotal)*100;
 
-  document.getElementById("screen").innerHTML=`
-  <div class="card">
-    <h2>${q.subject}: ${q.topic}</h2>
-    <p>Question ${current+1} of ${selectedTotal}</p>
-    <div class="progress"><div class="progress-bar" style="width:${progress}%"></div></div>
-    <h3>${q.q}</h3>
-    <div id="answers"></div>
-    <button id="hintBtn" class="hint" onclick="showHint()">💡 Use One-Time Hint</button>
-    <div id="hintBox"></div>
-    <button class="skip" onclick="skipQuestion()">Skip Question</button>
-    <div id="feedback"></div>
-  </div>`;
+document.getElementById("screen").innerHTML=`
+<div class="card">
+<h2>${q.subject}: ${q.topic}</h2>
+<p>Question ${current+1} of ${selectedTotal}</p>
+<div class="progress"><div class="progress-bar" style="width:${progress}%"></div></div>
+<h3>${q.q}</h3>
+<div id="answers"></div>
+<button id="hintBtn" class="hint" onclick="showHint()">💡 Use One-Time Hint</button>
+<div id="hintBox"></div>
+<button class="skip" onclick="skipQuestion()">Skip Question</button>
+<div id="feedback"></div>
+</div>`;
 
-  const answers=document.getElementById("answers");
-  q.shuffled.choices.forEach((choice,index)=>{
-    const btn=document.createElement("button");
-    btn.innerHTML=choice;
-    btn.onclick=()=>checkAnswer(index);
-    answers.appendChild(btn);
-  });
+const answers=document.getElementById("answers");
+q.shuffled.choices.forEach((choice,index)=>{
+const btn=document.createElement("button");
+btn.innerHTML=choice;
+btn.onclick=()=>checkAnswer(index);
+answers.appendChild(btn);
+});
 }
 
 function showHint(){
-  const q=testQuestions[current];
-  if(q.hintUsedThisQuestion) return;
+const q=testQuestions[current];
+if(q.hintUsedThisQuestion) return;
 
-  q.hintUsedThisQuestion=true;
-  hintsUsed++;
+q.hintUsedThisQuestion=true;
+hintsUsed++;
 
-  document.getElementById("hintBox").innerHTML=`<div class="hint-box">💡 Hint: ${q.hint}</div>`;
-  const hintBtn=document.getElementById("hintBtn");
-  hintBtn.disabled=true;
-  hintBtn.innerHTML="💡 Hint Used";
-  updateStats();
+document.getElementById("hintBox").innerHTML=`<div class="hint-box">💡 Hint: ${q.hint}</div>`;
+const hintBtn=document.getElementById("hintBtn");
+hintBtn.disabled=true;
+hintBtn.innerHTML="💡 Hint Used";
+updateStats();
 }
 
 function checkAnswer(choice){
-  const q=testQuestions[current];
-  const isCorrect=choice===q.shuffled.answer;
+const q=testQuestions[current];
+const isCorrect=choice===q.shuffled.answer;
 
-  document.querySelectorAll("#answers button").forEach(b=>b.disabled=true);
-  document.getElementById("hintBtn").disabled=true;
+document.querySelectorAll("#answers button").forEach(b=>b.disabled=true);
+document.getElementById("hintBtn").disabled=true;
 
-  if(isCorrect){
-    correct++;
-    score+=q.hintUsedThisQuestion?4:5;
-    addBlock();
-    document.getElementById("feedback").innerHTML=q.hintUsedThisQuestion
-    ?"✅ Correct! Hint used, so you earned 4 points. "+q.explain
-    :"✅ Correct! "+q.explain;
-  }else{
-    wrong++;
-    document.getElementById("feedback").innerHTML="❌ Not quite. "+q.explain;
-  }
+if(isCorrect){
+correct++;
+score+=q.hintUsedThisQuestion?4:5;
+addBlock();
+document.getElementById("feedback").innerHTML=q.hintUsedThisQuestion
+?"✅ Correct! Hint used, so you earned 4 points. "+q.explain
+:"✅ Correct! "+q.explain;
+}else{
+wrong++;
+document.getElementById("feedback").innerHTML="❌ Not quite. "+q.explain;
+}
 
-  updateStats();
-  setTimeout(nextQuestion,1200);
+updateStats();
+setTimeout(nextQuestion,1200);
 }
 
 function skipQuestion(){
-  skipped++;
-  updateStats();
-  nextQuestion();
+skipped++;
+updateStats();
+nextQuestion();
 }
 
 function nextQuestion(){
-  current++;
-  if(current>=selectedTotal) showResults(false);
-  else loadQuestion();
+current++;
+if(current>=selectedTotal) showResults(false);
+else loadQuestion();
 }
 
 function endByTime(){
-  clearInterval(timerInterval);
-  showResults(true);
+clearInterval(timerInterval);
+showResults(true);
 }
 
 function showResults(timeUp){
-  clearInterval(timerInterval);
-  const attempted=correct+wrong;
-  const percentage=Math.round((correct/selectedTotal)*100);
+clearInterval(timerInterval);
+const attempted=correct+wrong;
+const percentage=Math.round((correct/selectedTotal)*100);
 
-  let grade="";
-  if(percentage>=90) grade="🏆 Excellent — Master Level!";
-  else if(percentage>=75) grade="🌟 Strong — good exam readiness.";
-  else if(percentage>=60) grade="👍 Decent — practise more application questions.";
-  else grade="📚 Needs revision — strengthen foundation first.";
+let grade="";
+if(percentage>=90) grade="🏆 Excellent — Master Level!";
+else if(percentage>=75) grade="🌟 Strong — good exam readiness.";
+else if(percentage>=60) grade="👍 Decent — practise more application questions.";
+else grade="📚 Needs revision — strengthen foundation first.";
 
-  document.getElementById("timer").innerHTML="00:00";
+document.getElementById("timer").innerHTML="00:00";
 
-  document.getElementById("screen").innerHTML=`
-  <div class="card">
-    <h1>${timeUp?"⏱️ Time Up!":"✅ Challenge Complete!"}</h1>
-    <h2>${grade}</h2>
-    <p><b>Subject:</b> ${selectedSubject}</p>
-    <p><b>Topics:</b> ${selectedTopics.join(", ")}</p>
-    <p><b>Total Questions:</b> ${selectedTotal}</p>
-    <p><b>Attempted:</b> ${attempted}</p>
-    <p><b>Correct:</b> ${correct}</p>
-    <p><b>Wrong:</b> ${wrong}</p>
-    <p><b>Skipped:</b> ${skipped}</p>
-    <p><b>Hints Used:</b> ${hintsUsed}</p>
-    <p><b>Score:</b> ${score} / ${selectedTotal*5}</p>
-    <p><b>Percentage:</b> ${percentage}%</p>
-    <button onclick="showSetup()">Start New Challenge</button>
-  </div>`;
+document.getElementById("screen").innerHTML=`
+<div class="card">
+<h1>${timeUp?"⏱️ Time Up!":"✅ Challenge Complete!"}</h1>
+<h2>${grade}</h2>
+<p><b>Subject:</b> ${selectedSubject}</p>
+<p><b>Topics:</b> ${selectedTopics.join(", ")}</p>
+<p><b>Total Questions:</b> ${selectedTotal}</p>
+<p><b>Attempted:</b> ${attempted}</p>
+<p><b>Correct:</b> ${correct}</p>
+<p><b>Wrong:</b> ${wrong}</p>
+<p><b>Skipped:</b> ${skipped}</p>
+<p><b>Hints Used:</b> ${hintsUsed}</p>
+<p><b>Score:</b> ${score} / ${selectedTotal*5}</p>
+<p><b>Percentage:</b> ${percentage}%</p>
+<button onclick="showSetup()">Start New Challenge</button>
+</div>`;
 }
 
 function addBlock(){
-  const block=document.createElement("div");
-  const types=["block","block grass","block stone","block water","block gold"];
-  block.className=types[Math.floor(Math.random()*types.length)];
-  document.getElementById("blocks").appendChild(block);
+const block=document.createElement("div");
+const types=["block","block grass","block stone","block water","block gold"];
+block.className=types[Math.floor(Math.random()*types.length)];
+document.getElementById("blocks").appendChild(block);
 }
 
 function updateStats(){
-  document.getElementById("score").innerHTML=score;
-  document.getElementById("correct").innerHTML=correct;
-  document.getElementById("wrong").innerHTML=wrong;
-  document.getElementById("skipped").innerHTML=skipped;
-  document.getElementById("hintsUsed").innerHTML=hintsUsed;
+document.getElementById("score").innerHTML=score;
+document.getElementById("correct").innerHTML=correct;
+document.getElementById("wrong").innerHTML=wrong;
+document.getElementById("skipped").innerHTML=skipped;
+document.getElementById("hintsUsed").innerHTML=hintsUsed;
 }
 
 function updateTimer(){
-  const mins=Math.floor(sessionTime/60);
-  const secs=sessionTime%60;
-  const timer=document.getElementById("timer");
-  timer.innerHTML=`${String(mins).padStart(2,"0")}:${String(secs).padStart(2,"0")}`;
-  timer.className="timer-good";
-  if(sessionTime<=300) timer.className="timer-warning";
-  if(sessionTime<=60) timer.className="timer-danger";
+const mins=Math.floor(sessionTime/60);
+const secs=sessionTime%60;
+const timer=document.getElementById("timer");
+timer.innerHTML=`${String(mins).padStart(2,"0")}:${String(secs).padStart(2,"0")}`;
+timer.className="timer-good";
+if(sessionTime<=300) timer.className="timer-warning";
+if(sessionTime<=60) timer.className="timer-danger";
 }
 
 function shuffle(array){
-  for(let i=array.length-1;i>0;i--){
-    const j=Math.floor(Math.random()*(i+1));
-    [array[i],array[j]]=[array[j],array[i]];
-  }
-  return array;
+for(let i=array.length-1;i>0;i--){
+const j=Math.floor(Math.random()*(i+1));
+[array[i],array[j]]=[array[j],array[i]];
+}
+return array;
 }
 
 function safeId(text){
-  return text.replace(/\s+/g,"-").replace(/[^a-zA-Z0-9-]/g,"");
+return text.replace(/\s+/g,"-").replace(/[^a-zA-Z0-9-]/g,"");
 }
 
 showSetup();
