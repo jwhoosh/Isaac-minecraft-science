@@ -12,9 +12,10 @@ h1{color:#2e7d32}
 .card{background:white;padding:22px;border-radius:12px;margin-top:20px}
 button{display:block;width:92%;max-width:760px;margin:10px auto;padding:14px;font-size:16px;border:0;border-radius:8px;background:#795548;color:white;cursor:pointer}
 button:hover{background:#5d4037}
-.option-btn{background:#2e7d32}.option-btn:hover{background:#1b5e20}
+.option-btn{background:#2e7d32}
 .selected{background:#1565c0!important}
-.skip{background:#e65100}.hint{background:#f9a825;color:#222}
+.skip{background:#e65100}
+.hint{background:#f9a825;color:#222}
 .hint-box{background:#fff8e1;border:2px solid #f9a825;border-radius:10px;padding:12px;margin:12px auto;max-width:760px;font-weight:bold}
 .stats{font-size:18px;margin:10px}
 #feedback{font-weight:bold;font-size:18px;margin-top:15px}
@@ -55,22 +56,27 @@ const subjects = {
   Mathematics:["Whole Numbers","Fractions","Decimals","Measurement","Geometry","Word Problems"]
 };
 
-const baseQuestions = [
+const questions = [
 {subject:"Science",topic:"Plants",q:"A plant was kept in a dark cupboard but watered daily. After one week, its leaves turned yellow. Why?",options:["It did not get enough sunlight to make food.","It received too much water.","It had no oxygen.","It had too much soil."],answer:0,explain:"Plants need sunlight to make food.",hint:"Think about what plants need for photosynthesis."},
 {subject:"Science",topic:"Plants",q:"A pupil removed most leaves from a plant. The plant grew poorly. Why?",options:["It could not make enough food.","It could not absorb water.","It became heavier.","It received too much air."],answer:0,explain:"Leaves help plants make food.",hint:"Which part traps sunlight?"},
 {subject:"Science",topic:"Plants",q:"A seedling with damaged roots is likely to die. Why?",options:["It cannot absorb enough water and mineral salts.","It cannot attract bees.","It cannot make fruits immediately.","It cannot bend towards light."],answer:0,explain:"Roots absorb water and mineral salts.",hint:"Focus on the function of roots."},
+
 {subject:"Science",topic:"Matter",q:"Water droplets formed outside a cold cup. Where did they come from?",options:["Water vapour in the air condensed.","Water leaked through the cup.","The cup melted.","The drink passed through the cup."],answer:0,explain:"Water vapour condenses on cold surfaces.",hint:"The droplets came from the air."},
 {subject:"Science",topic:"Matter",q:"A wet shirt dries faster under the sun. Why?",options:["Heat speeds up evaporation.","Sunlight freezes water.","The shirt absorbs more water.","Air becomes solid."],answer:0,explain:"Heat increases evaporation.",hint:"Drying means liquid water changes into vapour."},
 {subject:"Science",topic:"Matter",q:"Ice cubes become water after being left outside. What happened?",options:["The ice gained heat and melted.","The ice lost heat and melted.","The water froze.","The air became colder."],answer:0,explain:"Ice melts when it gains heat.",hint:"Solid to liquid."},
+
 {subject:"Science",topic:"Magnets",q:"A magnet attracts paper clips but not aluminium foil. What can you conclude?",options:["Only some metals are magnetic.","All metals are magnetic.","Aluminium is heavier.","Paper clips are not metal."],answer:0,explain:"Not all metals are magnetic.",hint:"Do not assume every metal is attracted to magnets."},
 {subject:"Science",topic:"Magnets",q:"Two magnets push away from each other. What is the likely reason?",options:["Like poles are facing each other.","Unlike poles are facing each other.","They are too heavy.","They have no poles."],answer:0,explain:"Like poles repel.",hint:"Same poles do not attract."},
 {subject:"Science",topic:"Magnets",q:"A steel pin moves towards a magnet even with paper between them. What does this show?",options:["Magnetic force can pass through some materials.","Paper is magnetic.","The pin became lighter.","The magnet touched the pin."],answer:0,explain:"Magnetic force can act through paper.",hint:"The magnet did not touch the pin."},
+
 {subject:"Science",topic:"Forces",q:"A toy car travels further on smooth tiles than on carpet. Why?",options:["There is less friction on tiles.","There is more gravity on carpet.","The car is heavier on carpet.","Tiles push the car."],answer:0,explain:"Less friction allows it to travel further.",hint:"Rough surfaces slow objects more."},
 {subject:"Science",topic:"Forces",q:"A ball slows down after rolling on the floor. Which force causes this?",options:["Friction","Magnetism","Light","Electricity"],answer:0,explain:"Friction slows moving objects.",hint:"This force acts against motion."},
 {subject:"Science",topic:"Forces",q:"Why do shoes usually have grooves at the bottom?",options:["To increase friction and prevent slipping.","To reduce weight only.","To make shoes magnetic.","To absorb sunlight."],answer:0,explain:"Grooves increase friction.",hint:"Think about grip."},
+
 {subject:"Science",topic:"Life Cycles",q:"A caterpillar was found after eggs hatched on a leaf. Which animal is likely being observed?",options:["Butterfly","Chicken","Fish","Cat"],answer:0,explain:"Butterfly eggs hatch into caterpillars.",hint:"Which animal has a caterpillar stage?"},
 {subject:"Science",topic:"Life Cycles",q:"A tadpole develops legs and later becomes an adult frog. What is this change called?",options:["Metamorphosis","Evaporation","Condensation","Magnetisation"],answer:0,explain:"Frogs undergo metamorphosis.",hint:"A major body-form change."},
 {subject:"Science",topic:"Life Cycles",q:"Why are fruits important in a plant life cycle?",options:["They contain seeds for reproduction.","They absorb water.","They hold the plant upright.","They make all food."],answer:0,explain:"Fruits usually contain seeds.",hint:"Think about how new plants grow."},
+
 {subject:"Science",topic:"Food Chains",q:"Grass → Grasshopper → Frog → Snake. If grass decreases greatly, what may happen?",options:["Grasshoppers may decrease.","Frogs will make food.","Snakes become producers.","Grasshoppers need no food."],answer:0,explain:"Grasshoppers depend on grass.",hint:"Look at what eats grass directly."},
 {subject:"Science",topic:"Food Chains",q:"Grass → Rabbit → Eagle. If rabbits decrease, what may happen to eagles?",options:["Eagles may have less food.","Eagles will eat grass only.","Eagles become plants.","Rabbits become producers."],answer:0,explain:"Eagles depend on rabbits.",hint:"What does the eagle eat?"},
 {subject:"Science",topic:"Food Chains",q:"Why does every food chain usually begin with a plant?",options:["Plants can make their own food.","Plants eat animals.","Plants hunt insects only.","Plants do not need sunlight."],answer:0,explain:"Plants are producers.",hint:"Producers start food chains."},
@@ -78,47 +84,41 @@ const baseQuestions = [
 {subject:"Mathematics",topic:"Whole Numbers",q:"What is 4,208 + 3,759?",options:["7,967","7,957","8,067","6,967"],answer:0,explain:"4,208 + 3,759 = 7,967.",hint:"Add ones, tens, hundreds and thousands carefully."},
 {subject:"Mathematics",topic:"Whole Numbers",q:"A shop sold 2,468 apples in the morning and 1,735 apples in the afternoon. How many apples were sold altogether?",options:["4,203","4,103","3,203","4,293"],answer:0,explain:"2,468 + 1,735 = 4,203.",hint:"Altogether means addition."},
 {subject:"Mathematics",topic:"Whole Numbers",q:"There are 6 boxes. Each box has 48 pencils. How many pencils are there altogether?",options:["288","248","268","308"],answer:0,explain:"6 × 48 = 288.",hint:"Equal groups mean multiplication."},
-{subject:"Mathematics",topic:"Whole Numbers",q:"A number rounded to the nearest hundred is 3,500. Which number could it be?",options:["3,462","3,449","3,551","3,399"],answer:0,explain:"3,462 rounds to 3,500.",hint:"Look at the tens digit."},
 
 {subject:"Mathematics",topic:"Fractions",q:"Which fraction is equivalent to 1/2?",options:["2/4","1/3","3/5","2/5"],answer:0,explain:"1/2 = 2/4.",hint:"Equivalent fractions have the same value."},
 {subject:"Mathematics",topic:"Fractions",q:"Isaac ate 3/8 of a pizza. His brother ate 2/8. How much did they eat altogether?",options:["5/8","1/8","6/8","5/16"],answer:0,explain:"3/8 + 2/8 = 5/8.",hint:"Same denominator, add the numerators."},
-{subject:"Mathematics",topic:"Fractions",q:"Which is larger?",options:["3/4","2/4","1/4","0/4"],answer:0,explain:"3/4 is the largest.",hint:"Same denominator, compare numerators."},
 {subject:"Mathematics",topic:"Fractions",q:"A ribbon is 1 metre long. Mei used 3/10 metre. How much ribbon is left?",options:["7/10 metre","3/10 metre","4/10 metre","6/10 metre"],answer:0,explain:"1 - 3/10 = 7/10.",hint:"1 whole = 10/10."},
 
 {subject:"Mathematics",topic:"Decimals",q:"What is 3.4 + 2.5?",options:["5.9","5.8","6.9","4.9"],answer:0,explain:"3.4 + 2.5 = 5.9.",hint:"Line up the decimal points."},
 {subject:"Mathematics",topic:"Decimals",q:"Which decimal is equal to 7/10?",options:["0.7","0.07","7.0","0.17"],answer:0,explain:"7/10 = 0.7.",hint:"Tenths are one digit after the decimal point."},
 {subject:"Mathematics",topic:"Decimals",q:"A bottle has 1.5 litres of water. Isaac drinks 0.4 litres. How much is left?",options:["1.1 litres","1.9 litres","0.9 litres","1.0 litres"],answer:0,explain:"1.5 - 0.4 = 1.1.",hint:"Left means subtract."},
-{subject:"Mathematics",topic:"Decimals",q:"Which is the greatest number?",options:["2.8","2.08","2.18","2.38"],answer:0,explain:"2.8 is the greatest.",hint:"Compare tenths first."},
 
 {subject:"Mathematics",topic:"Measurement",q:"A rope is 3 m 40 cm long. How many centimetres is this?",options:["340 cm","304 cm","3,040 cm","430 cm"],answer:0,explain:"3 m = 300 cm, so 300 + 40 = 340 cm.",hint:"1 m = 100 cm."},
 {subject:"Mathematics",topic:"Measurement",q:"A movie starts at 2:15 pm and ends at 3:45 pm. How long is the movie?",options:["1 h 30 min","1 h 15 min","2 h","90 h"],answer:0,explain:"From 2:15 to 3:45 is 1 hour 30 minutes.",hint:"Count from start time to end time."},
 {subject:"Mathematics",topic:"Measurement",q:"A packet has a mass of 2 kg 300 g. What is this in grams?",options:["2300 g","2030 g","2003 g","3200 g"],answer:0,explain:"2 kg = 2000 g, plus 300 g = 2300 g.",hint:"1 kg = 1000 g."},
-{subject:"Mathematics",topic:"Measurement",q:"A tank holds 5 litres. How many millilitres is this?",options:["5000 ml","500 ml","50 ml","550 ml"],answer:0,explain:"5 litres = 5000 ml.",hint:"1 litre = 1000 ml."},
 
 {subject:"Mathematics",topic:"Geometry",q:"How many right angles does a rectangle have?",options:["4","2","3","1"],answer:0,explain:"A rectangle has 4 right angles.",hint:"Each corner of a rectangle is a right angle."},
-{subject:"Mathematics",topic:"Geometry",q:"Which shape has 3 sides?",options:["Triangle","Square","Rectangle","Pentagon"],answer:0,explain:"A triangle has 3 sides.",hint:"Tri means three."},
 {subject:"Mathematics",topic:"Geometry",q:"A square has a side length of 6 cm. What is its perimeter?",options:["24 cm","12 cm","36 cm","18 cm"],answer:0,explain:"6 × 4 = 24 cm.",hint:"Perimeter is the total distance around."},
 {subject:"Mathematics",topic:"Geometry",q:"Which angle is smaller than a right angle?",options:["Acute angle","Obtuse angle","Straight angle","Reflex angle"],answer:0,explain:"An acute angle is less than 90°.",hint:"Right angle is 90°."},
 
 {subject:"Mathematics",topic:"Word Problems",q:"A book costs $12. Isaac buys 4 books. How much does he pay?",options:["$48","$36","$16","$42"],answer:0,explain:"12 × 4 = 48.",hint:"Same price repeated means multiplication."},
 {subject:"Mathematics",topic:"Word Problems",q:"There are 96 sweets shared equally among 8 children. How many sweets does each child get?",options:["12","10","14","16"],answer:0,explain:"96 ÷ 8 = 12.",hint:"Shared equally means division."},
-{subject:"Mathematics",topic:"Word Problems",q:"Isaac had $50. He bought a toy for $18 and a book for $12. How much money was left?",options:["$20","$30","$24","$18"],answer:0,explain:"18 + 12 = 30. 50 - 30 = 20.",hint:"Find total spent first."},
-{subject:"Mathematics",topic:"Word Problems",q:"A class has 32 pupils. They are arranged equally into 4 groups. How many pupils are in each group?",options:["8","6","7","9"],answer:0,explain:"32 ÷ 4 = 8.",hint:"Equal groups means divide."}
+{subject:"Mathematics",topic:"Word Problems",q:"Isaac had $50. He bought a toy for $18 and a book for $12. How much money was left?",options:["$20","$30","$24","$18"],answer:0,explain:"18 + 12 = 30. 50 - 30 = 20.",hint:"Find total spent first."}
 ];
 
-let questionBank = [];
+let questionBank=[];
 for(let i=0;i<6;i++){
-  baseQuestions.forEach((q,index)=>{
+  questions.forEach((q,index)=>{
     questionBank.push({...q,id:q.subject+"-"+q.topic+"-"+index+"-"+i});
   });
 }
 
-let selectedSubject = "Science";
-let selectedTopics = [...subjects.Science];
-let selectedTotal = 20;
-let sessionTime = 20 * 60;
-let testQuestions = [];
-let current = 0, score = 0, correct = 0, wrong = 0, skipped = 0, hintsUsed = 0;
+let selectedSubject="Science";
+let selectedTopics=[...subjects.Science];
+let selectedTotal=20;
+let sessionTime=20*60;
+let testQuestions=[];
+let current=0,score=0,correct=0,wrong=0,skipped=0,hintsUsed=0;
 let timerInterval;
 
 function showSetup(){
@@ -126,37 +126,36 @@ function showSetup(){
   document.getElementById("stats").style.display="none";
   document.getElementById("blocks").innerHTML="";
 
-  let html=`
+  document.getElementById("screen").innerHTML=`
   <div class="card">
     <h2>Choose Your Challenge</h2>
 
     <h3>1. Select Subject</h3>
-    <button id="subjectScience" class="option-btn ${selectedSubject==="Science"?"selected":""}" onclick="selectSubject('Science')">Science</button>
-    <button id="subjectMath" class="option-btn ${selectedSubject==="Mathematics"?"selected":""}" onclick="selectSubject('Mathematics')">Mathematics</button>
+    <button class="option-btn ${selectedSubject==="Science"?"selected":""}" onclick="selectSubject('Science')">Science</button>
+    <button class="option-btn ${selectedSubject==="Mathematics"?"selected":""}" onclick="selectSubject('Mathematics')">Mathematics</button>
 
     <h3>2. Select Topics</h3>
-    <button id="allTopicsBtn" class="option-btn selected" onclick="toggleAllTopics()">All Topics</button>
+    <button id="allTopicsBtn" class="option-btn" onclick="toggleAllTopics()">All Topics</button>
     <div id="topicButtons"></div>
 
     <h3>3. Select Number of Questions</h3>
-    <button id="q20" class="option-btn selected" onclick="selectTotal(20)">20 Questions</button>
+    <button id="q20" class="option-btn" onclick="selectTotal(20)">20 Questions</button>
     <button id="q30" class="option-btn" onclick="selectTotal(30)">30 Questions</button>
     <button id="q40" class="option-btn" onclick="selectTotal(40)">40 Questions</button>
 
     <p id="topicWarning" class="warning"></p>
 
     <p class="small">
-      Timer is for the whole session.<br>
-      20 questions = 20 minutes, 30 questions = 30 minutes, 40 questions = 40 minutes.<br>
-      Each question has one optional hint.
+      You can select one topic, multiple topics, or all topics.<br>
+      Timer is for the whole session. Each question has one optional hint.
     </p>
 
     <button onclick="startTest()">Start Challenge</button>
   </div>`;
 
-  document.getElementById("screen").innerHTML=html;
   renderTopicButtons();
   refreshTopicButtons();
+  refreshQuestionButtons();
 }
 
 function selectSubject(subject){
@@ -168,7 +167,7 @@ function selectSubject(subject){
 function renderTopicButtons(){
   let html="";
   subjects[selectedSubject].forEach(topic=>{
-    html+=`<button id="topic-${safeId(topic)}" class="option-btn selected" onclick="toggleTopic('${topic}')">${topic}</button>`;
+    html+=`<button id="topic-${safeId(topic)}" class="option-btn" onclick="toggleTopic('${topic}')">${topic}</button>`;
   });
   document.getElementById("topicButtons").innerHTML=html;
 }
@@ -196,17 +195,29 @@ function refreshTopicButtons(){
     const btn=document.getElementById("topic-"+safeId(topic));
     if(btn) btn.classList.toggle("selected",selectedTopics.includes(topic));
   });
+
   const allBtn=document.getElementById("allTopicsBtn");
-  if(allBtn) allBtn.classList.toggle("selected",selectedTopics.length===subjects[selectedSubject].length);
+  if(allBtn){
+    allBtn.classList.toggle("selected",selectedTopics.length===subjects[selectedSubject].length);
+  }
+
   const warning=document.getElementById("topicWarning");
-  if(warning) warning.innerHTML=selectedTopics.length===0?"Please select at least one topic.":"";
+  if(warning){
+    warning.innerHTML=selectedTopics.length===0?"Please select at least one topic.":"";
+  }
 }
 
 function selectTotal(total){
   selectedTotal=total;
   sessionTime=total*60;
-  [20,30,40].forEach(n=>document.getElementById("q"+n).classList.remove("selected"));
-  document.getElementById("q"+total).classList.add("selected");
+  refreshQuestionButtons();
+}
+
+function refreshQuestionButtons(){
+  [20,30,40].forEach(n=>{
+    const btn=document.getElementById("q"+n);
+    if(btn) btn.classList.toggle("selected",selectedTotal===n);
+  });
 }
 
 function startTest(){
@@ -237,7 +248,7 @@ function startTest(){
 }
 
 function buildRandomTest(pool,total){
-  let result=[], available=shuffle([...pool]), lastText="";
+  let result=[],available=shuffle([...pool]),lastText="";
   while(result.length<total){
     if(available.length===0) available=shuffle([...pool]);
     let idx=available.findIndex(q=>q.q!==lastText);
@@ -253,7 +264,7 @@ function buildRandomTest(pool,total){
 function shuffleAnswerOptions(options,answerIndex){
   let arr=options.map((text,i)=>({text,correct:i===answerIndex}));
   arr=shuffle(arr);
-  return {choices:arr.map(x=>x.text),answer:arr.findIndex(x=>x.correct)};
+  return{choices:arr.map(x=>x.text),answer:arr.findIndex(x=>x.correct)};
 }
 
 function loadQuestion(){
@@ -285,6 +296,7 @@ function loadQuestion(){
 function showHint(){
   const q=testQuestions[current];
   if(q.hintUsedThisQuestion) return;
+
   q.hintUsedThisQuestion=true;
   hintsUsed++;
 
@@ -307,8 +319,8 @@ function checkAnswer(choice){
     score+=q.hintUsedThisQuestion?4:5;
     addBlock();
     document.getElementById("feedback").innerHTML=q.hintUsedThisQuestion
-      ?"✅ Correct! Hint used, so you earned 4 points. "+q.explain
-      :"✅ Correct! "+q.explain;
+    ?"✅ Correct! Hint used, so you earned 4 points. "+q.explain
+    :"✅ Correct! "+q.explain;
   }else{
     wrong++;
     document.getElementById("feedback").innerHTML="❌ Not quite. "+q.explain;
