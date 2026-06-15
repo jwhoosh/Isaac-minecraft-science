@@ -52,12 +52,12 @@ button:hover{background:#5d4037}
 </div>
 
 <script>
-const subjects = {
-  Science:["Plants","Matter","Magnets","Forces","Life Cycles","Food Chains"],
-  Mathematics:["Whole Numbers","Fractions","Decimals","Measurement","Geometry","Word Problems"]
+const subjects={
+Science:["Plants","Matter","Magnets","Forces","Life Cycles","Food Chains"],
+Mathematics:["Whole Numbers","Fractions","Decimals","Measurement","Geometry","Word Problems"]
 };
 
-const questions = [
+const questions=[
 {subject:"Science",topic:"Plants",q:"A plant was kept in a dark cupboard but watered daily. After one week, its leaves turned yellow. Why?",options:["It did not get enough sunlight to make food.","It received too much water.","It had no oxygen.","It had too much soil."],answer:0,explain:"Plants need sunlight to make food.",hint:"Think about what plants need for photosynthesis."},
 {subject:"Science",topic:"Plants",q:"A pupil removed most leaves from a plant. The plant grew poorly. Why?",options:["It could not make enough food.","It could not absorb water.","It became heavier.","It received too much air."],answer:0,explain:"Leaves help plants make food.",hint:"Which part traps sunlight?"},
 {subject:"Science",topic:"Plants",q:"A seedling with damaged roots is likely to die. Why?",options:["It cannot absorb enough water and mineral salts.","It cannot attract bees.","It cannot make fruits immediately.","It cannot bend towards light."],answer:0,explain:"Roots absorb water and mineral salts.",hint:"Focus on the function of roots."},
@@ -139,8 +139,7 @@ for(let i=0;i<5;i++){
 }
 
 let selectedSubject="Science";
-let selectedTopics=[...subjects.Science];
-let allMode=true;
+let selectedTopics=[];
 let selectedTotal=20;
 let sessionTime=20*60;
 let testQuestions=[];
@@ -161,7 +160,6 @@ function showSetup(){
     <button class="option-btn ${selectedSubject==="Mathematics"?"selected":""}" onclick="selectSubject('Mathematics')">Mathematics</button>
 
     <h3>2. Select Topics</h3>
-    <button id="allTopicsBtn" class="option-btn" onclick="toggleAllTopics()">All Topics</button>
     <div id="topicButtons"></div>
 
     <h3>3. Select Number of Questions</h3>
@@ -169,12 +167,10 @@ function showSetup(){
     <button id="q30" class="option-btn" onclick="selectTotal(30)">30 Questions</button>
     <button id="q40" class="option-btn" onclick="selectTotal(40)">40 Questions</button>
 
-    <p id="topicWarning" class="warning"></p>
+    <p id="topicWarning" class="warning">Please select at least one topic.</p>
 
     <p class="small">
-      Click one topic for single-topic practice.<br>
-      Click multiple topics to mix topics in one challenge.<br>
-      Click All Topics to include everything.<br>
+      Select one or multiple topics.<br>
       Timer is for the whole session. Each question has one optional hint.
     </p>
 
@@ -188,8 +184,7 @@ function showSetup(){
 
 function selectSubject(subject){
   selectedSubject=subject;
-  selectedTopics=[...subjects[subject]];
-  allMode=true;
+  selectedTopics=[];
   showSetup();
 }
 
@@ -202,31 +197,11 @@ function renderTopicButtons(){
 }
 
 function toggleTopic(topic){
-  if(allMode){
-    selectedTopics=[topic];
-    allMode=false;
+  if(selectedTopics.includes(topic)){
+    selectedTopics=selectedTopics.filter(t=>t!==topic);
   }else{
-    if(selectedTopics.includes(topic)){
-      selectedTopics=selectedTopics.filter(t=>t!==topic);
-    }else{
-      selectedTopics.push(topic);
-    }
-
-    allMode = selectedTopics.length === subjects[selectedSubject].length;
+    selectedTopics.push(topic);
   }
-
-  refreshTopicButtons();
-}
-
-function toggleAllTopics(){
-  if(allMode){
-    selectedTopics=[];
-    allMode=false;
-  }else{
-    selectedTopics=[...subjects[selectedSubject]];
-    allMode=true;
-  }
-
   refreshTopicButtons();
 }
 
@@ -236,11 +211,10 @@ function refreshTopicButtons(){
     if(btn) btn.classList.toggle("selected",selectedTopics.includes(topic));
   });
 
-  const allBtn=document.getElementById("allTopicsBtn");
-  if(allBtn) allBtn.classList.toggle("selected",allMode);
-
   const warning=document.getElementById("topicWarning");
-  if(warning) warning.innerHTML=selectedTopics.length===0?"Please select at least one topic.":"";
+  if(warning){
+    warning.innerHTML=selectedTopics.length===0?"Please select at least one topic.":"Selected topics: "+selectedTopics.join(", ");
+  }
 }
 
 function selectTotal(total){
@@ -401,7 +375,7 @@ function showResults(timeUp){
     <h1>${timeUp?"⏱️ Time Up!":"✅ Challenge Complete!"}</h1>
     <h2>${grade}</h2>
     <p><b>Subject:</b> ${selectedSubject}</p>
-    <p><b>Topics:</b> ${allMode ? "All Topics" : selectedTopics.join(", ")}</p>
+    <p><b>Topics:</b> ${selectedTopics.join(", ")}</p>
     <p><b>Total Questions:</b> ${selectedTotal}</p>
     <p><b>Attempted:</b> ${attempted}</p>
     <p><b>Correct:</b> ${correct}</p>
